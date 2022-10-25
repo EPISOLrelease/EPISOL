@@ -1,0 +1,8 @@
+# gmxtop2solute 1.0.316
+[solute]
+# gmxtop2solute -top ../../src/NaCl-tip3p.top -excl SOL
+# molecule: CL
+     1   CL      1   CL  0.00           -1     0.440104       0.4184
+# molecule: NA
+     2   NA      1   NA  0.00            1      0.33284    0.0115897
+

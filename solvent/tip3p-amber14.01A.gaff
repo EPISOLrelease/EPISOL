@@ -1,0 +1,28 @@
+#
+[solvent]
+    ff          gaff
+    rbohr       0.0001
+    rvdw        2
+    rcoul       2
+    gvv         0.001 gvv.tip3p.1DDRISM.01A.txt
+    density     33.42288177     # input density for amber rism1d : 55 mol/L at 298K
+    dipole      0.0488648 
+    dielect     78.41 
+[atom]
+# == Based on GROMACS TIP3P, modified according to AMBER 1D-RISM setups ===
+#  name      mole idx grp      charge       sigma     epsilon
+    OW      tip3p   1   1   -0.834000    0.315061    0.636386
+    HW      tip3p   2   2    0.417000    0.123635    0.063639
+    HW2     tip3p   3   2    0.417000    0.123635    0.063639
+# == Reverse engineering from AMBER 1D-RISM setup, incorrect params =======
+#   O1      tip3p   1   1   -0.834000    0.353660    0.635968
+#   H2      tip3p   2   2    0.417000    0.138775    0.0635968
+#   H3      tip3p   3   2    0.417000    0.138775    0.0635968
+[zeta]
+    tip3p   tip3p   0.288   -40 kJ/mol
+[bond]
+#      atom1       atom2    bond(nm)
+    tip3p.OW    tip3p.HW    0.09572
+    tip3p.OW    tip3p.HW2   0.09572
+    tip3p.HW    tip3p.HW2   0.15139
+
