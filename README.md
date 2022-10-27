@@ -1,6 +1,6 @@
-<img src="https://github.com/EPISOLrelease/EPISOL/blob/main/images/logo_512.png" height=100></img>
+<img src="https://github.com/seechin/EPISOL/blob/main/images/logo_512.png" height=100></img>
 
-# The Expanded Package of IET Solver
+# The Expanded Package for IET-based Solvation
 
 The graphic interface to do IET calculations
 
@@ -16,17 +16,11 @@ The EPISOL uses a server-client architecture for the GUI. The server side requir
 
 Extract the EPISOL package to a sub-folder of your website.
 
-Note: the user of website server (e.g. www-data) needs to have write access to the home folder of EPISOL.
-
 ## Start EPISOL server with the build-in server of PHP
 
-php -S YOUR_IP_ADDRESS:A_PORT -t EPISOL_ROOT_FOLDER
+php -S YOUR_IP_ADDRESS:A_PORT -t CWBSOL_ROOT_FOLDER
 
-e.g.: php -S 127.0.0.1:8080 -t $HOME/Downloads/EPISol-master
-
-## Visit the website in your browser
-
-Open browswer and nevigate to your server address (via Apache2) or YOUR_IP_ADDRESS:A_PORT (via php).
+e.g.: php -S 127.0.0.1:8080 -t $HOME/Downloads/CWBSol-master
 
 # Install the necessary components
 

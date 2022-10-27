@@ -6,7 +6,7 @@
         echo('<center><div class="logobanner"'.(empty($theme_bbanner)?'':' style="background-image:url(/images/'.$theme_bbanner.')"').'><div class="container">'.(empty($theme_banner)?'':'<a href="index.php"><img src="images/'.$theme_banner.'" class="logo" /></a>').'</div></div></center>'."\n");
     }
     echo ('<div class="menubar"><div class="container">'."\n");
-    if (strcasecmp($title, "Expanded Package for IET Solver")==0){
+    if (strcasecmp($title, "Expanded Package for IET-based Solvation")==0){
         echo ('  <a href="index.php"><div class="navba">Home</div></a>'."\n");
     } else {
         echo ('  <a href="index.php"><div class="navbb">Home</div></a>'."\n");

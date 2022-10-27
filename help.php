@@ -7,7 +7,7 @@
 
 <div class="container" style="width:95%;min-width:400;text-align:left;padding:3;">
 
-<br><center><div class="container"><h3>EPISol: the Expanded Package of IET Solver</h3></div></center><br>
+<br><center><div class="container"><h3>EPISol: the Expanded Package for IET-based solvation</h3></div></center><br>
 
 <center><div class="container" style="background-color:#EEEEEE"><h4> IET options </h4></div></center>
 

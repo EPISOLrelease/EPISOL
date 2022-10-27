@@ -1,5 +1,5 @@
 <?php
-    $title = "Expanded Package for IET Solver";
+    $title = "Expanded Package for IET-based Solvation";
 
     include ("ietsettings.php");
 
@@ -17,7 +17,7 @@
 
     echo ('<center>'."\n");
 
-    echo ('<br><center><div class="container"><h3>EPISol: the Expanded Package of IET Solver</h3></div></center>'."\n");
+    echo ('<br><center><div class="container"><h3>EPISol: the Expanded Package for IET-based Solvation</h3></div></center>'."\n");
 
     $xtc_support = file_exists($configfile)? (empty(shell_exec("cat ".$configfile." | grep _GROMACS_"))? "" : "on") : "on";
 
