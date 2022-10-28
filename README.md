@@ -1,4 +1,4 @@
-<img src="https://github.com/seechin/EPISOL/blob/main/images/logo_512.png" height=100></img>
+<img src="https://github.com/EPISOLrelease/EPISOL/blob/main/images/logo_512.png" height=100></img>
 
 # The Expanded Package for IET-based Solvation
 
