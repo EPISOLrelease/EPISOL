@@ -19,8 +19,6 @@
 
     echo ('<br><center><div class="container"><h3>EPISol: the Expanded Package for IET-based Solvation</h3></div></center>'."\n");
 
-    $xtc_support = file_exists($configfile)? (empty(shell_exec("cat ".$configfile." | grep _GROMACS_"))? "" : "on") : "on";
-
     echo ('<div class="container" style="width:90%;min-width:400;text-align:left;padding:3;">'."\n");
 
     echo ('<h4>&#9678 What is '.$software_name.'?</h4>
