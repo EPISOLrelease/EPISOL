@@ -7,6 +7,11 @@ h4{font-family:Arial;font-size:18;margin:3}
 h3{font-family:Arial;font-size:24;margin:4}
 h2{font-family:Arial;font-size:30;margin:5}
 h1{font-family:Arial;font-size:44;margin:7}
+input[type="text"]{ font-size:14px; }
+input[type="submit"]{ font-size:16px; }
+input[type="textarea"]{ font-size:14px; }
+select{ font-size:16px; }
+iframe{ border:1px solid #808080; }
 .container {
     width:100%;margin-right:auto;margin-left:auto;font-family:Arial;
 }
@@ -87,7 +92,7 @@ h1{font-family:Arial;font-size:44;margin:7}
 }
 .navbd {
     cursor: pointer;
-    display:inline-block;float:right;text-align:left;padding:2;line-height:1;
+    display:inline-block;float:right;text-align:center;padding:2;line-height:1;
     font-family:Arial;color:#191970;
 }
 .navbd:hover {
@@ -173,7 +178,7 @@ div.itembox {
     float:left;
     word-wrap:break-word;
     display:inline;
-    border-style:solid; border-color:#CCCCCC; border-width:0.5px;
+    border-style:solid; border-color:#808080; border-width:1px;
 }
 div.itemtitle {
     margin: 2;font-family:Arial;

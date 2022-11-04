@@ -29,8 +29,9 @@
 
     echo ('<div class="itembox" style="width:480;height:480">'."\n");
       echo ('<div class="container" style="width:480;height:30">'."\n");
-        echo ('<div class="navbc" onclick="view_file_by_id(\'filename\',\'&rebuild=on\')"><small>view</small></div>'."\n");
-        echo ('<form action="'.$phpurl.'" method="post"><input type="text" id="filename" name="filename" value="" style="width:430" /></form>');
+        //echo ('<div class="navbc" id="viewbutton" onclick="view_file_by_id(\'filename\',\'&rebuild=on\')"><small>view</small></div>'."\n");
+        //echo ('<form action="'.$phpurl.'" method="post"><input type="text" id="filename" name="filename" value="" style="width:430" /></form>');
+        echo ('<form action="'.$phpurl.'" method="post"><input type="text" id="filename" name="filename" value="" style="width:100%" /></form>');
       echo ('</div>'."\n");
 
 

@@ -73,6 +73,7 @@
     $ver_convert = shell_exec("convert --version|head -n1|awk '{print $3}'");
     if (!empty($ver_convert)){
         echo ("<br>ImageMagick ".$ver_convert." installed<br>");
+        echo ('<small>Please <a href="help.php#analysis_convert_eps" style="color:blue">click me</a> to see how to<br> allow ImageMagick to write EPS/PNG</small><br>');
     } else {
         echo ('<br><font color=red>Please install ImageMagick for analysing</font></br>'."\n");
     }
@@ -81,11 +82,20 @@
     echo ('  <form action="install.php" method="post" style="display:inline;">'."\n");
     echo ('    <input type="submit" '.(empty($fftw)?'':'style="color:red"').' name="fftw" value="'.(empty($ver_fftw)?'install':'reinstall').' fftw3" '.(empty($working)?'':'disabled="disabled"').' />'."\n");
     echo ('    <input type="submit" '.(empty($main)?'':'style="color:red"').' name="main" value="'.(empty($iet_bin)?'install':'reinstall').' kernel" '.(empty($working)?'':'disabled="disabled"').' />'."\n");
-    echo ('    <input type="submit" name="stop" value="done"/>'."\n");
+
+    if (!empty($fftw)||!empty($main)){
+        echo ('    <br><br><input type="submit" name="stop" value="Has installation finished? Click me to check"/>'."\n");
+    } else if (empty($iet_bin)){
+        echo ('    <br><br><input type="submit" name="stop" value="Has installation finished? Click me to check"/>'."\n");
+    } else {
+        echo ('    <br><br><input type="submit" name="stop" value="Kernel installed, click me won\'t change anything"/>'."\n");
+    }
     echo ('  </form><br>'."\n");
 
     if (file_exists("src/stdout.txt")){
-        echo ('<br><a href="viewfile.php?scroll=bottom&u='.getcwd().'/src/stdout.txt" target="_blank">Check installation log</a>'."\n");
+        echo ('<br><a href="viewfile.php?scroll=bottom&u='.getcwd().'/src/stdout.txt&reload=3" target="_blank">Click me the see the installation log</a>'."\n");
+    } else if (empty($iet_bin)){
+        echo ('<br><small><a href="help.php#cannot_write_folder" style="color:#0080FF">Click me if you clicked installation buttons but<br> these two lines of blue text still exist</a></small>'."\n");
     }
 
     echo ('</div><br>');

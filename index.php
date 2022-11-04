@@ -8,30 +8,32 @@
     echo ('<style> p { text-indent: 1em; } </style>'."\n");
     include ("page_header_element.php");
 
-    $ver_rismhi3d = ""; if (!empty($rismhi3d)) $ver_rismhi3d = shell_exec($rismhi3d);
-    $ver_ts4sdump = ""; if (!empty($ts4sdump)) $ver_ts4sdump = shell_exec($ts4sdump);
-    $ver_gmxtop2solute = ""; if (!empty($gmxtop2solute)) $ver_gmxtop2solute = shell_exec($gmxtop2solute);
-    $ver_gensolvent = ""; if (!empty($gensolvent)) $ver_gensolvent = shell_exec($gensolvent);
-
     echo ('<div class="container" style="margin:5 auto;">'."\n");
 
     echo ('<center>'."\n");
 
     echo ('<br><center><div class="container"><h3>EPISol: the Expanded Package for IET-based Solvation</h3></div></center>'."\n");
 
+    if (empty($kernel_version)){
+        echo('<br>Kernel not installed. <a href="install.php" style="color:red"><b>Please install the kernel of '.$software_name.'</b></a>'."\n");
+    } else {
+        echo('<br>'.$software_name.' '.$software_version.', kernel '.$kernel_version."\n");
+    }
+
     echo ('<div class="container" style="width:90%;min-width:400;text-align:left;padding:3;">'."\n");
 
     echo ('<h4>&#9678 What is '.$software_name.'?</h4>
   <p>'.$software_name.' is the graphic interface to do IET (integration equation theory of liquid) calculations. '.$software_name.' can produce site-based (i.e. atom-based) thermodynamical distributions of simple liquids around a given conformation of solute molecule; and HI can calculate molecule-based liquid density depletion of polar solvents or density segregation of solvent mixtures at solid-liquid interfaces.</p>
-  <p> '.$software_name.' currently contains the implementations of <a style="color:blue" href="http://doi.org/10.1021/cr5000283">3D Reference Interaction Site Model</a> (3DRISM), <a style="color:blue" href="http://doi.org/10.1063/1.4928051">Hydrophobicity induced density Inhomogeneity theory</a> (HI), <a style="color:blue" href="">Ion-Dipole Correction</a> (IDC). See '.$software_name.' can be seen in <a style="color:blue" href="">JCC ...</a> for details.
+  <p> '.$software_name.' currently contains the implementations of <a style="color:blue" href="http://doi.org/10.1021/cr5000283">3D Reference Interaction Site Model</a> (3DRISM), <a style="color:blue" href="http://doi.org/10.1063/1.4928051">Hydrophobicity induced density Inhomogeneity theory</a> (HI), <a style="color:blue" href="https://doi.org/10.1021/acs.jpcb.2c04431">Ion-Dipole Correction</a> (IDC). EPISol-1.1.321 can be seen in <a style="color:blue" href="">JCC ...</a>.
 '."\n");
+    echo ('<p><b>Security concern</b>: please <a href="help.php#about_security" style="color:red"><b>click me</b></a> to see the security concerns to have a copy of EPISol on your server.'."\n");
 
 // A step by step guide
 
-$gmx_source_lib = getenv('GMXDATA');
-echo ('<h4>&#9678 A step by step guide</h4>
-<p>1. First of all, install the kernel. Please nevigate to the <a href="install.php"><u style="color:#0000A0">install page</u></a>, press <input type="submit" value="install fftw3" /> to install FFTW3, and then press <input type="submit" value="install kernel" /> to install the kernel. If installed successfully, the <a href="install.php"><u style="color:#0000A0">install page</u></a> will show the versions of FFTW and kernel instead of "FFTW3 not installed" or "Please install kernel".
-<p>2. Before running the IET calculations, three input files need to be prepared: the solvent file, the solute file, and the conformation/trajectory file. These files are specified in the three file explorers in the <a href="iet.php"><u style="color:#0000A0">IET page</u></a>.
+    $gmx_source_lib = getenv('GMXDATA');
+    echo ('<h4>&#9678 A step by step guide</h4>'."\n");
+    if (empty($kernel_version)) echo('<p>First of all, install the kernel. Please nevigate to the <a href="install.php"><u style="color:#0000A0">install page</u></a>, press <input type="submit" value="install fftw3" /> to install FFTW3, and then press <input type="submit" value="install kernel" /> to install the kernel. If installed successfully, the <a href="install.php"><u style="color:#0000A0">install page</u></a> will show the versions of FFTW and kernel instead of "FFTW3 not installed" or "Please install kernel".'."\n");
+    echo ('<p>1. Before running the IET calculations, three input files need to be prepared: the solvent file, the solute file, and the conformation/trajectory file. These files are specified in the three file explorers in the <a href="iet.php"><u style="color:#0000A0">IET page</u></a>.
 <p>Several solvent files have been generated in the <a href="analysis.php?filename='.getcwd().'/solvent"><u style="color:#0000A0">solvent</u></a> folder. The conformation or trajectory can be a PDF/GRO/XTC file.  A multiframe PDB/GRO/XTC is recognized as a trajectory.
 <p>The solute file: If you have <a href="viewfile.php?u='.getcwd().'/solute/methane.prmtop"><u style="color:#0000A0">AMBER\'s PRMTOP</u></a> then you can skip this step. If you want to use <a href="viewfile.php?u='.getcwd().'/solute/methane.top"><u style="color:#0000A0">GROMACS\'s TOP</u></a>, you need to use <a href="gmxtop2solute.php?top='.getcwd().'/solute/methane.top&sname=methane"><u style="color:#0000A0">gmxtop2solute</u></a> to translate it into <a href="viewfile.php?u='.getcwd().'/solute/methane.solute"><u style="color:#0000A0">the solute format</u></a>. ');
 if (empty($gmx_source_lib)){
@@ -39,14 +41,14 @@ if (empty($gmx_source_lib)){
 } else {
     echo ('($GMXDATA already set to '.$gmx_source_lib.')');
 };
-echo ('
+    echo ('
 <p>Note: gmxtop2solute will generate two solute files: the original solute file (directly translated from TOP file), and the IDC corrected solute fil (generated from original solute file). This is the only way to generate IDC related parameters. Therefore, you need to use the solute format if you want to do IDC.
-<p>3. Run the IET calculations. You can either <a href="iet.php?workspace=default&solute='.getcwd().'/solute/methane.prmtop&solvent='.getcwd().'/solvent/tip3p-amber14.01A.gaff&traj='.getcwd().'/solute/methane.pdb&rc=1.2&nr=60x60x60&log=tutorial_methane&out=tutorial_methane&verbo=2&debug=0&debugxc=16&closure=KH&steprism=500&stephi=0&temperature=298&save=515&report=45&display=table&rdfbins=60&rdfgrps=1-1,1-2&fmt=14.7g&lsa=0.3&xvvextend=0&ndiis=5&delvv=1&errtol=0.0000001&sd=5&enlv=1&coulomb=Coulomb&ignoreram=no"><u style="color:#0000A0">run with PRMTOP</u></a> or <a href="iet.php?workspace=default&solute='.getcwd().'/solute/methane.solute&solvent='.getcwd().'/solvent/tip3p-amber14.01A.gaff&traj='.getcwd().'/solute/methane.gro&rc=1.2&nr=60x60x60&log=tutorial_methane&out=tutorial_methane&verbo=2&debug=0&debugxc=16&closure=KH&steprism=500&stephi=0&temperature=298&save=515&report=45&display=table&rdfbins=60&rdfgrps=1-1,1-2&fmt=14.7g&lsa=0.3&xvvextend=0&ndiis=5&delvv=1&errtol=0.0000001&sd=5&enlv=1&coulomb=Coulomb&ignoreram=no"><u style="color:#0000A0">run with SOLUTE</u></a>. Press the <input type="submit" value="perform calculation" /> button there to start calculations. After starting IET, please press the <input type="submit" value="view screen output" /> button to check <a href="viewfile.php?scroll=bottom&u='.getcwd().'/run/default/tutorial_methane"><u style="color:#0000A0">the screen output (or log)</u></a>.
-<p>4. Analyse the outputs.
+<p>2. Run the IET calculations. You can either <a href="iet.php?workspace=default&solute='.getcwd().'/solute/methane.prmtop&solvent='.getcwd().'/solvent/tip3p-amber14.01A.gaff&traj='.getcwd().'/solute/methane.pdb&rc=1.2&nr=60x60x60&log=tutorial_methane&out=tutorial_methane&verbo=2&debug=0&debugxc=16&closure=KH&steprism=500&stephi=0&temperature=298&save=515&report=45&display=table&rdfbins=60&rdfgrps=1-1,1-2&fmt=14.7g&lsa=0.3&xvvextend=0&ndiis=5&delvv=1&errtol=0.0000001&sd=5&enlv=1&coulomb=Coulomb&ignoreram=no"><u style="color:#0000A0">run with PRMTOP</u></a> or <a href="iet.php?workspace=default&solute='.getcwd().'/solute/methane.solute&solvent='.getcwd().'/solvent/tip3p-amber14.01A.gaff&traj='.getcwd().'/solute/methane.gro&rc=1.2&nr=60x60x60&log=tutorial_methane&out=tutorial_methane&verbo=2&debug=0&debugxc=16&closure=KH&steprism=500&stephi=0&temperature=298&save=515&report=45&display=table&rdfbins=60&rdfgrps=1-1,1-2&fmt=14.7g&lsa=0.3&xvvextend=0&ndiis=5&delvv=1&errtol=0.0000001&sd=5&enlv=1&coulomb=Coulomb&ignoreram=no"><u style="color:#0000A0">run with SOLUTE</u></a>. Press the <input type="submit" value="perform calculation" /> button there to start calculations. After starting IET, please press the <input type="submit" value="view screen output" /> button to check <a href="viewfile.php?scroll=bottom&u='.getcwd().'/run/default/tutorial_methane"><u style="color:#0000A0">the screen output (or log)</u></a>.
+<p>3. Analyse the outputs.
 After successfully performing the previous step: (a) From <a href="analysis.php?filename='.getcwd().'/run/default/tutorial_methane"><u style="color:#0000A0">the screen out put</u></a>, the hydration free energy can be calculated with the excessive chemical potential (columne “excess”) and partial molar volume (columne “volume”) following the Universal Correction scheme.
-(b) Click <a href="analysis.php?filename='.getcwd().'/run/default/tutorial_methane.rdf"><u style="color:#0000A0">tutorial_methane.rdf</u></a> and you can see the raw data of RDF. Then press the <a href="analysis.php?filename='.getcwd().'/run/default/tutorial_methane.rdf&rebuild=on"><span style="padding:2;background-color:#EEEEEE"><small>view</small></span></a> button to view image of this RDF file.
+(b) Click <a href="analysis.php?filename='.getcwd().'/run/default/tutorial_methane.rdf"><u style="color:#0000A0">tutorial_methane.rdf</u></a> and you can see the RDF. 
 (c) Click <a href="analysis.php?filename='.getcwd().'/run/default/tutorial_methane.ts4s"><u>tutorial_methane.ts4s</u></a> to view the TS4S file. This TS4S file should have two frames, where the second frame contain the spatial distribution of density. Choose the second frame <span style="background-color:#EEEEEE"><small><input type="radio" value="2" checked> Frame 2  guv@1, real8:60x60x60x2</input></small></span> and click the <input type="submit" value="render image" /> to generate cutviews in <a href="analysis.php?filename='.getcwd().'/run/default/tutorial_methane.ts4s.frame_2"><u>methane.ts4s.frame_2</u></a> folder.
-<p>5. If you have any question, or find options difficult to understand, please click the link on the options or directly nevigate to the <a href="help.php"><u style="color:#0000A0">help page</u></a>.
+<p>4. If you have any question, or find options difficult to understand, please click the link on the options or directly nevigate to the <a href="help.php"><u style="color:#0000A0">help page</u></a>.
 </p>
 '."\n");
 

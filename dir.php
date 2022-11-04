@@ -149,10 +149,11 @@
 
   // display name of this folder or file
 
-    echo ('<div class="content">'."\n");
-    echo ('<div class="navbd" style="border-style:solid;border-width:0.5px;" onclick="change_sort(\''.$phpurl.'?'.$key.'='.$url.$urlex.'\')"><small>'.$sortfile_key[$sortfile].'</small></div>'."\n");
+    //echo ('<div class="content">'."\n");
 
-    echo ('<div class="content">'."\n");
+    echo ('<div class="navbd" style="border-style:solid;border-width:0.5px;width:3%" onclick="change_sort(\''.$phpurl.'?'.$key.'='.$url.$urlex.'\')"><small>'.$sortfile_key[$sortfile].'</small></div>'."\n");
+
+    echo ('<div class="content" style="width:95%">'."\n");
 
     echo ('<div id="address" hidden>'.$url.(empty($urlf)?"":"/".$urlf).'</div>');
 
@@ -174,7 +175,7 @@
 
     echo ('</div>'."\n");
 
-    echo ('</div>'."\n");
+    //echo ('</div>'."\n");
 
   // display name of all items in this folder
 

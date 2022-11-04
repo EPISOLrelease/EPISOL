@@ -7,6 +7,7 @@
     $heatmap = file_exists("src/kernel/bin/heatmap")? "src/kernel/bin/heatmap" : "";
     $generate_idc = file_exists("src/kernel/bin/generate-idc.sh")? "src/kernel/bin/generate-idc.sh" : "";
     $iet_bin = (!empty($rismhi3d) && !empty($gmxtop2solute) && !empty($ts4sdump))? "src/kernel/bin" : "";
+    $kernel_version = ""; if (!empty($rismhi3d)) $kernel_version = shell_exec($rismhi3d." --version");
 
   echo("<html><head>\n");
     echo ('<meta charset="utf-8" />'."\n");

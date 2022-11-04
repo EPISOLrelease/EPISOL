@@ -61,6 +61,11 @@ fi
         cat ${data[$i]}
     done | awk -v pn=0 '{if(NF-1>pn)pn=NF-1}END{print pn}');
 
+    xpanels=$panels; ypanels=1;
+    if [ $panels -gt 10 ]; then
+        xpanels=10; ypanels=$((panels%10==0?panels/10:panels/10+1))
+    fi
+
     range_array=($ranges);
     minx=${range_array[1+array_shift]};
     maxx=${range_array[2+array_shift]};
@@ -76,9 +81,9 @@ fi
 
 #    WIDTH=`echo $maxx|awk '{printf("%g",$1*0.7)}`
 
-    echo set term postscript eps color linewidth 1 \"Arial,32\" enhanced size $((panels)),1 
+    echo set term postscript eps color linewidth 1 \"Arial,12\" enhanced size $xpanels,$ypanels 
     echo set output \"$OUTPUT.eps\"
-    echo set multiplot layout 1,$panels
+    echo set multiplot layout $ypanels,$xpanels
     echo set xrange [0:$WIDTH]
     echo set yrange [0:$HEIGHT]
     echo set key bottom
@@ -93,11 +98,12 @@ fi
 
     echo set ytics 1
     echo set xtics 0.5
-    echo set mx2tics 4
 
+    echo set key spacing 0
 
     for ((a=1; a<=panels; a++)); do
         icolor=1; istyle=1;
+        echo set xlabel \"`head -n1 ${data[1]}|awk -v a=$a '{print $(a+1)}'`\" offset 0,12.5,0 tc rgb \"grey\"
         printf 'plot \\\n'
         for ((i=1;i<=ndata;i++)); do
           if [ $i -eq $ndata ]; then

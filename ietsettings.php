@@ -1,7 +1,7 @@
 <?php
 
-    $closures_MSAHNC = array( "HNC", "PLHNC", "MSA", "KGK", "KH", "PSE2", "PSE3", "PSE4", "PSE5", "PSE6", "PSE7", "PSE8", "PSE9", "PSE10" );
-    $closures = array( "HNC", "PLHNC", "MSA", "KGK", "KH", "PSE2", "PSE3", "PSE4", "PSE5", "PSE6", "PSE7", "PSE8", "PSE9", "PSE10", "PY", "HNCB", "D2", "MS", "BPGG", "Marucho-Pettitt", "MHNC", "Modified-Verlet" );
+    //$closures_MSAHNC = array( "HNC", "PLHNC", "MSA", "KGK", "KH", "PSE2", "PSE3", "PSE4", "PSE5", "PSE6", "PSE7", "PSE8", "PSE9", "PSE10" );
+    $closures = array( "HNC", "PLHNC", "MSA", "KGK", "KH", "PSE2", "PSE3", "PSE4", "PSE5", "PSE6", "PSE7", "PSE8", "PSE9", "PSE10", "PY", "HNCB", "D2", "MS", "BPGG", "MP", "MHNC", "VM" );
 
     class IETSettings {
         public $workspace;
@@ -18,7 +18,7 @@
        // files
         if (empty($set->workspace  )) $set->workspace   = $_GET["workspace"]?? "";
         if (empty($set->solute     )) $set->solute      = $_GET["solute"]?? "";
-        if (empty($set->solvent    )) $set->solvent     = $_GET["solvent"]?? "";
+        if (empty($set->solvent    )) $set->solvent     = $_GET["solvent"]?? getcwd()."/solvent/tip3p-amber14.01A.gaff";
         if (empty($set->traj       )) $set->traj        = $_GET["traj"]?? "";
        // basic options
         if (empty($set->np         )) $set->np          = $_GET["np"   ]?? "";
@@ -26,19 +26,19 @@
         if (empty($set->rc         )) $set->rc          = $_GET["rc"   ]?? 1;
         if (empty($set->nr         )) $set->nr          = $_GET["nr"   ]?? "100x100x100";
         if (empty($set->box        )) $set->box         = $_GET["box"  ]?? "";
-        if (empty($set->log        )) $set->log         = $_GET["log"  ]?? "";
+        if (empty($set->log        )) $set->log         = $_GET["log"  ]?? "stdout.log";
         if (empty($set->out        )) $set->out         = $_GET["out"  ]?? "";
-        if (empty($set->verbo      )) $set->verbo       = $_GET["verbo"]?? 1;
+        if (empty($set->verbo      )) $set->verbo       = $_GET["verbo"]?? 0;
         if (empty($set->debug      )) $set->debug       = $_GET["debug"]?? 0;
-        if (empty($set->debugxc    )) $set->debugxc     = $_GET["debugxc"]?? 16;
-        if (empty($set->closure    )) $set->closure     = $_GET["closure" ]?? "KH";
+        if (empty($set->debugxc    )) $set->debugxc     = $_GET["debugxc"]?? 0;
+        if (empty($set->closure    )) $set->closure     = $_GET["closure" ]?? "PSE3";
         if (empty($set->steprism   )) $set->steprism    = $_GET["steprism"]?? 500;
         if (empty($set->stephi     )) $set->stephi      = $_GET["stephi"  ]?? 0;
         if (empty($set->cr         )) $set->cr          = $_GET["cr"      ]?? 0;
         if (empty($set->temperature)) $set->temperature = $_GET["temperature"  ]?? 298;
        // output
-        if (empty($set->save       )) $set->save        = $_GET["save"    ]?? 2051;
-        if (empty($set->report     )) $set->report      = $_GET["report"  ]?? 7;
+        if (empty($set->save       )) $set->save        = $_GET["save"    ]?? 0;
+        if (empty($set->report     )) $set->report      = $_GET["report"  ]?? 111;
         if (empty($set->display    )) $set->display     = $_GET["display" ]?? "table";
         if (empty($set->rdfbins    )) $set->rdfbins     = $_GET["rdfbins" ]?? 50;
         if (empty($set->rdfgrps    )) $set->rdfgrps     = $_GET["rdfgrps" ]?? "";
@@ -49,7 +49,7 @@
         if (empty($set->ndiis      )) $set->ndiis       = $_GET["ndiis"   ]?? 5;
         if (empty($set->delvv      )) $set->delvv       = $_GET["delvv"   ]?? 1;
         if (empty($set->errtol     )) $set->errtol      = $_GET["errtol"  ]?? "0.0000001";
-        if (empty($set->sd         )) $set->sd          = $_GET["sd"      ]?? 15;
+        if (empty($set->sd         )) $set->sd          = $_GET["sd"      ]?? 7;
         if (empty($set->enlv       )) $set->enlv        = $_GET["enlv"    ]?? 1;
         if (empty($set->coulomb    )) $set->coulomb     = $_GET["coulomb" ]?? "Coulomb";
         if (empty($set->coul_p     )) $set->coul_p      = $_GET["coul_p"  ]?? "";

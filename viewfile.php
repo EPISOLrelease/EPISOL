@@ -4,7 +4,9 @@
     $phpname = "viewfile.php";
     $rooturl = "/"; if (!empty($phpurl)) $rooturl = substr($phpurl, 0, strlen($phpurl)-strlen($phpname)); if ($rooturl=="/") $rooturl="";
 
-    function menu_bar($class, $alpha, $phpurl, $url, $scroll, $url_allow_edit, $filename, $fn_noext, $dirname){
+    function menu_bar($class, $alpha, $phpurl, $url, $scroll, $url_allow_edit, $filename, $filetype, $fn_noext, $dirname, $original, $reload){
+        $chagereload = empty($reload)?"&reload=3":"";
+
         echo ('<body'.(empty($scroll)?'':' onload="document.body.scrollTop='.($scroll=="bottom"?99999999999:$scroll).'"').'>'."\n");
         echo ('<div class="'.$class.'" style="opacity:'.$alpha.'"><div class="container">'."\n");
         $path_in_http = (substr($url, 0, strlen(getcwd())+1)==getcwd().'/')? substr($url, strlen(getcwd())+1) : "";
@@ -14,20 +16,27 @@
             echo ('  <div class="navbc2" style="float:left" >'.$filename.'</div>');
         }
         echo ('<div style="display:inline-block;float:right;">');
-        if ($url_allow_edit){
-            echo ('  <div class="navbc" onclick=reload_page("'.$phpurl.'?u='.$url.'")>Refresh</div>'."\n");
+        //if ($url_allow_edit){
+        if (empty($original)){
+            echo ('  <div class="navbc" onclick=reload_page("'.$phpurl.'?u='.$url.$chagereload.'")>'.(empty($reload)?'Refresh':'StopRefreshing')."</div>\n");
         } else {
-            echo ('  <div class="navbc" onclick=reload_page("'.$phpurl.'?u='.$url.'&original=on")>Refresh</div>'."\n");
+            echo ('  <div class="navbc" onclick=reload_page("'.$phpurl.'?u='.$url.$chagereload.'&original='.$original.'")>'.(empty($reload)?'Refresh':'StopRefreshing')."</div>\n");
         }
         if ($url_allow_edit){
-            echo ('  <div class="navbc" onclick=reload_page("'.$phpurl.'?u='.$url.'&original=on")>Original</div>'."\n");
-            echo ('  <div style="color:#E00000" class="navbc" onclick="confirm_reload(\'Are you sure to delete the following file from you disk?\n\n'.$filename.'\n\nCaution: this operation cannot be undone.\', \''.$phpurl.'?u='.$url.'&edit=delete\')" >Delete</div>'."\n");
-            echo ('  <div class="navbc" onclick="confirm_reload(\'Make another copy of '.$filename.'?\', \''.$phpurl.'?u='.$url.'&edit=duplicate\')" >Duplicate</div>'."\n");
+            if ($filetype==102||$filetype==103){
+                if (!empty($original) && $original=="on"){
+                    echo ('  <div class="navbc" onclick=reload_page("'.$phpurl.'?u='.$url.'")>ViewPlot</div>'."\n");
+                } else {
+                    echo ('  <div class="navbc" onclick=reload_page("'.$phpurl.'?u='.$url.'&original=on")>ViewText</div>'."\n");
+                }
+            }
             if (is_writable($url)){
                 echo ('  <div class="navbc" onclick="reload_page(\''.$phpurl.'?u='.$url.'&edit=lock\')" >Lock</div>'."\n");
             } else {
                 echo ('  <div class="navbc" onclick="reload_page(\''.$phpurl.'?u='.$url.'&edit=unlock\')" >Unlock</div>'."\n");
             }
+            echo ('  <div style="color:#E00000" class="navbc" onclick="confirm_reload(\'Are you sure to delete the following file from you disk?\n\n'.$filename.'\n\nCaution: this operation cannot be undone.\', \''.$phpurl.'?u='.$url.'&edit=delete\')" >Delete</div>'."\n");
+            echo ('  <div class="navbc" onclick="confirm_reload(\'Make another copy of '.$filename.'?\', \''.$phpurl.'?u='.$url.'&edit=duplicate\')" >Duplicate</div>'."\n");
             echo ('  <div class="navbc" onclick="confirm_rename(\''.$url.'\', \''.(is_dir($url)?$filename:$fn_noext).'\')" >Rename</div>'."\n");
             echo ('  <div class="navbc" onclick="confirm_move(\''.$url.'\', \''.$dirname.'\')" >Move</div>'."\n");
         }
@@ -54,6 +63,7 @@
     $edit = $_GET["edit"]??"";  // copy/move/rename/delete
     $dest = $_GET["dest"]??"";  // destination of copy/move/rename/delete
     $scroll = $_GET["scroll"]??"";
+    $reload = $_GET["reload"]??""; // seconds to reload
 
     $phpurl = "viewfile.php";
 
@@ -87,7 +97,70 @@
             reload_page("'.$phpurl.'?u='.$url.'&edit=move&dest="+newname);
         }
     }
-</script>');
+</script>'."\n");
+    if (!empty($reload)) if ($reload>0){
+        echo ('<script>
+    function auto_reload(){
+        location.reload();
+        document.body.scrollTop='.($scroll=="bottom"?99999999999:$scroll).';
+    }
+    setTimeout(auto_reload, '.($reload*1000).');
+</script>'."\n");
+    }
+
+
+    $filetype = 0;
+    if (!is_dir($url)){
+        $finfo = finfo_open(FILEINFO_MIME);
+        $ftype = finfo_file($finfo, $dirname.'/'.$filename);
+        if (substr($ftype, 0, 4) == 'text'){
+            $filetype = 1;
+        } else if (substr($ftype, 0, 5) == 'image'){
+            $filetype = 3; 
+        }
+        if (strcasecmp($ext, "htm")==0){
+            $filetype = 2; 
+        } else if (strcasecmp($ext, "html")==0){
+            $filetype = 2; 
+        } else if (strcasecmp($ext, "php")==0){
+            $filetype = 1; 
+        } else if (strcasecmp($ext, "ts4s")==0){
+            $filetype = 101;
+        } else if (strcasecmp($ext, "rdf")==0){
+            $filetype = 102;
+        } else if (strcasecmp($ext, "eps")==0){
+            $filetype = 103;
+        } else if (strcasecmp($ext, "tar")==0){
+            $filetype = 104;
+        } else if (strcasecmp($ext, "gz")==0){
+            $filetype = 104;
+        } else if (strcasecmp($ext, "zip")==0){
+            $filetype = 105;
+        }
+    }
+
+/*
+    if (!empty($reload)) if ($reload>0){
+        echo ('<script>
+    const filename = "'.$dirname.'/'.$filename.'";
+    var lastmtime = -1;
+    const Http = new XMLHttpRequest();
+    function auto_reload(){
+        Http.open("GET", "filemtime.php?file="+filename);
+        Http.onreadystatechange=(e)=>{ if (Http.readyState === XMLHttpRequest.DONE){
+            var thismtime = Http.responseText;
+            if (lastmtime>0 && lastmtime!=thismtime){
+                location.reload();
+                '.(empty($scroll)?"//":"").'document.body.scrollTop='.($scroll=="bottom"?99999999999:$scroll).';
+            }
+            lastmtime = thismtime;
+        }}
+        Http.send();
+    }
+    setInterval(auto_reload, '.($reload*1000).');
+</script>'."\n");
+    }
+*/
     include ("page_head.php");
 
     $url_allow_edit = false;
@@ -168,8 +241,26 @@
     if (assess_access_in($url, getcwd().'/run')) $url_allow_edit = true;
     if (assess_access_in($url, getcwd().'/solute')) $url_allow_edit = true;
 
-    menu_bar("menubar", 0.2, $phpurl, $url, $scroll, $url_allow_edit, $filename, $fn_noext, $dirname);
-    $path_in_http = menu_bar("topbar", 1, $phpurl, $url, $scroll, $url_allow_edit, $filename, $fn_noext, $dirname);
+    menu_bar("menubar", 0.2, $phpurl, $url, $scroll, $url_allow_edit, $filename, $filetype, $fn_noext, $dirname, $original, $reload);
+    $path_in_http = menu_bar("topbar", 1, $phpurl, $url, $scroll, $url_allow_edit, $filename, $filetype, $fn_noext, $dirname, $original, $reload);
+
+    if (!$url_allow_edit) $rebuild = "";
+
+    if ($url_allow_edit && ($filetype==102||$filetype==103)){  // check whether it's necessary to rebuild PNG for RDF and EPS files
+        $ver_gnuplot = shell_exec("gnuplot --version|head -n1|awk '{print $2}'");
+        $ver_convert = shell_exec("convert --version|head -n1|awk '{print $3}'");
+        if (empty($ver_gnuplot) || empty($ver_convert)){
+            $rebuild = "";
+        } else {
+            $fn_noext = substr($filename, 0, strlen($filename) - strlen($ext) - (substr($filename,strlen($filename)-strlen($ext)-1,1)=='.'?1:0));
+            $plotfilename = $fn_noext.".png";
+            if (file_exists($dirname.'/'.$plotfilename)){
+                $rebuild = "";
+            } else {
+                $rebuild = "plot";
+            }
+        }
+    }
 
     if (empty($url)){
         echo ("<body>\n");
@@ -197,7 +288,7 @@
             echo ("\n".'</div></div>'."\n");
         } else {
 
-            $filetype = 0;
+            /*$filetype = 0;
 
             if ($filename=="stdout" || $filename=="stderr" || $filename==".settings.php"){
                 $filetype = 1;
@@ -292,8 +383,7 @@
             } else if (strcasecmp($ext, "zip")==0){
                 $filetype = 105;
             }
-
-            $ft = filetype($url);
+            */
 
     //echo ("server document root:".$_SERVER['DOCUMENT_ROOT']."<br>\n");
     //echo ("current path:".getcwd()."<br>\n");
