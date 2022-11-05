@@ -1,5 +1,7 @@
 #!/bin/bash
 
+if [ ! `command -v convert` ]; then exit; fi
+
 renice  19 $$
 
 if [ -z "$6" ]; then echo "extract-ts4sdump-and-plot.sh : too few parameters"; exit; fi

@@ -17,7 +17,7 @@
     if (empty($kernel_version)){
         echo('<br>Kernel not installed. <a href="install.php" style="color:red"><b>Please install the kernel of '.$software_name.'</b></a>'."\n");
     } else {
-        echo('<br>'.$software_name.' '.$software_version.', kernel '.$kernel_version."\n");
+        echo('<br>'.$software_name.' '.$software_version.' (kernel '.$kernel_version.")\n");
     }
 
     echo ('<div class="container" style="width:90%;min-width:400;text-align:left;padding:3;">'."\n");
@@ -66,7 +66,7 @@ echo ('<h4>&#9678 Some demos</h4>
 
 
     echo ('<h4>&#9678 Licence</h4>
-  <p>All rights reserved. Academic use is licensed with <a href="https://www.gnu.org/licenses/lgpl-3.0.en.htm">GNU Lesser General Public License (LGPL)</a>. </p>
+  <p>All rights reserved. You can use and modify the software under the <a href="https://www.gnu.org/licenses/lgpl-3.0.en.htm" style="color:blue"><u>GNU Lesser General Public License v3</u></a>. </p>
 '."\n");
 
     echo ('</div>'."\n");

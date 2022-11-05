@@ -1,6 +1,15 @@
 #!/bin/bash
 
+if [ ! `command -v tar` ]; then exit; fi
+if [ ! `command -v make` ]; then exit; fi
+
 eprism_package=release
+
+if [ -e $eprism_package ]; then
+    echo Delete the old $eprism_package
+    mv $eprism_package obselete
+    rm -rf obselete
+fi
 
 if [ ! -e $eprism_package ]; then
     echo Extract the $eprism_package package

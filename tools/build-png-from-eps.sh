@@ -1,5 +1,7 @@
 #!/bin/bash
 
+if [ ! `command -v convert` ]; then exit; fi
+
 fn=$1;
 
 if [ -e $fn.eps ]; then

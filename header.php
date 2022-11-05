@@ -2,7 +2,7 @@
 
   // software
 
-    $software_version = "1.1.322";
+    $software_version = "1.1.323";
     if (file_exists("src/eprism3d/ver.php")) include ("src/eprism3d/ver.php");
     $software_name = "EPISol";
     $servername = "EPISol";

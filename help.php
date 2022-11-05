@@ -61,8 +61,7 @@
 
 <p><div id="iet_igram"><b>Ignore physical RAM size</b></div> (-ignore-ram): enable this then eprism3d will not check physical memory when applying for memory. This option is to prevent you exhausting the physical RAM of your computer, and eprism3d will quite immediately when this options is off and the required memory exceeds the total size of physical memory. Highly suggest not to enble this option.
 
-</p>
-<br><br>
+</p><br>
 
 <center><div class="container" style="background-color:#EEEEEE"><h4>Trouble Shooting</h4></div></center>
 
@@ -83,8 +82,7 @@ GROMACS has switched to shared libaries since GROMACS 5. Therefore, any software
 <br>It's highly recommended to use GROMACS 4, the last version that only uses static libraries. As the XTC format is compatible across all version of GROMACS, EPISol compiled with GROMACS 4 can also read the XTC the generated with GROMACS 5, 2016 or 2018.
 <br>It's totally fine to disable the XTC support, as multiframe PDB/GRO trajectories can be correctly handled with EPISol.
 
-</p>
-<br><br>
+</p><br>
 
 <center><div class="container" style="background-color:#EEEEEE"><h4>Frequently Encounted Problems</h4></div></center>
 
@@ -107,8 +105,8 @@ Error message: <font color=magenta>eprism3d : error : numbers of atoms mismatch:
 Error message: <font color=magenta>eprism3d : args[9] : unknown option "-nt" ... </font>
 <br>EPISol is compiled with single thread, while you try to run it with multiple thread. To solve this, either reinstall with multithread support enabled (i.e. Maximum >1 threads), or leave both the two text boxes of “threads” empty.
 
-<p><div id="analysis_convert_eps"><b>Error: cannot convert RDF or EPS to PNG</b></div>
-In <a href="analysis.php">the analysis page</a>, if you selected a RDF or EPS file and press <div class="navbc" style="background-color:#EEEEEE;float:none"><small>view</small></div> button, a PNG file with the same filename should be generated. But this may not happen on some machines. If you already have ImageMagick installed, you may still have difficulty to do this due to the default policy settings of ImageMagick. On a Linux server, you can check the ImageMagick policy file, e.g. <font color=blue>/etc/ImageMagick*/policy.xml</font>, where you may see:
+<p><div id="analysis_convert_eps"><b>Error: cannot convert RDF or EPS to PNG</b></div><div id="analysis_convert_eps">aka. <b>Configue ImageMagick to write EPS/PNG</b></div>
+In <a href="analysis.php">the analysis page</a>, if you selected a RDF or EPS file and you have gnuplot and ImageMagick, a PNG file with the same filename should be generated. But this may not happen on some machines. If you already have ImageMagick installed, you may still have difficulty to do this due to the default policy settings of ImageMagick. On a Linux server, you can check the ImageMagick policy file, e.g. <font color=blue>/etc/ImageMagick*/policy.xml</font>, where you may see:
 <br><font color=blue>&lt;policy domain="coder" rights="none" pattern="PS" /&gt;</font>
 <br><font color=blue>&lt;policy domain="coder" rights="none" pattern="EPS" /&gt;</font>
 <br><font color=blue>&lt;policy domain="coder" rights="none" pattern="PDF" /&gt;</font>
@@ -116,6 +114,19 @@ In <a href="analysis.php">the analysis page</a>, if you selected a RDF or EPS fi
 <br><font color=green>&lt;policy domain="coder" rights="read|write" pattern="PS" /&gt;</font>
 <br><font color=green>&lt;policy domain="coder" rights="read|write" pattern="EPS" /&gt;</font>
 <br><font color=green>&lt;policy domain="coder" rights="read|write" pattern="PDF" /&gt;</font>
+
+</p><br>
+
+<center><div class="container" style="background-color:#EEEEEE"><h4>Others</h4></div></center>
+
+<p><div id="update"><b>How to update EPISOL</b></div>
+Download <a href="https://github.com/seechin/EPRISM3D"><u>EPISOL from Github</u></a> to a separate folder, and use rsync to overwrite the files in your existing EPISOL. After this, you need to reinstall the kernel in the <a href="install.php"><u>installation page</u></a>.
+
+<p><div id="update_kernel"><b>How to update the kernel</b></div>
+If you follow the above instructions to update the whole EPISOL, then the kernel is updated as well. If you want a separate update of the kernel, please download release.tar.gz from <a href="https://github.com/EPISOLrelease/EPISOL/tree/main/src/kernel"><u>the Github page</u></a> to replace the file of the same name at src/kernel/ sub-folder of the EPISOL. Then reinstall the kernel in the <a href="install.php"><u>installation page</u></a>.
+
+
+</p><br>
 
 </div></div>
 <br>

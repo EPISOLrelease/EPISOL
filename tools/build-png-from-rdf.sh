@@ -1,5 +1,8 @@
 #!/bin/bash
 
+if [ ! `command -v gnuplot` ]; then exit; fi
+if [ ! `command -v convert` ]; then exit; fi
+
 fn=$1;
 
 if [ -e $fn.rdf ]; then

@@ -19,13 +19,20 @@
         shell_exec('cd src/kernel; bash run-build-core.sh');
     }
 
-    $kernel_version = ""; if (!empty($rismhi3d)) $kernel_version = shell_exec($rismhi3d." --version");
+    $check_kernel_update = $_GET["update"]??"";
+
+    $kernel_version = ""; if (!empty($rismhi3d)) $kernel_version = shell_exec($rismhi3d." --version|tr -d '\n'");
     $ver_rismhi3d = ""; if (!empty($rismhi3d)) $ver_rismhi3d = shell_exec($rismhi3d);
     $ver_ts4sdump = ""; if (!empty($ts4sdump)) $ver_ts4sdump = shell_exec($ts4sdump);
     $ver_gmxtop2solute = ""; if (!empty($gmxtop2solute)) $ver_gmxtop2solute = shell_exec($gmxtop2solute);
     $ver_gensolvent = ""; if (!empty($gensolvent)) $ver_gensolvent = shell_exec($gensolvent);
     $ver_heatmap = ""; if (!empty($heatmap)) $ver_heatmap = shell_exec($heatmap);
     $ver_generate_idc = ""; if (!empty($generate_idc)) $ver_generate_idc = $ver_rismhi3d;
+
+    $bin_tar = shell_exec("command -v tar");
+    $bin_make = shell_exec("command -v make");
+
+    echo ('<div class="container" style="text-align:right"><small><a href="install.php?update=yes"><u>Check update</u></a><br></small></div>'."\n");
 
     //$ver_fftw = ""; if (file_exists("src/fftw/fftw3/lib/libfftw3.a")) $ver_fftw = "3";
 
@@ -34,11 +41,34 @@
     echo ('<center>'."\n");
 
     echo ('<div class="container" style="margin:5 auto;">'."\n");
+
+
+    if ($check_kernel_update=="yes"){
+        $main_update_tip = "";
+        $latest_main_version = shell_exec("curl https://raw.githubusercontent.com/EPISOLrelease/EPISOL/main/header.php 2>/dev/null | grep software_version | tr -d '\"' | tr -d ';' | awk '{print \$NF}' | tr -d '\n'");
+        if (!empty($latest_main_version)){
+            if ($software_version != $latest_main_version){
+                $main_update_tip = $software_name.' <a href="https://github.com/EPISOLrelease/EPISOL"><u>'.$latest_main_version."</u></a> is available";
+            } else $main_update_tip = $software_name." is up to date";
+        }
+
+        $kernel_update_tip = "";
+        $latest_kernel_version = shell_exec("curl https://raw.githubusercontent.com/seechin/EPRISM3D/main/configure.ac 2>/dev/null | grep AC_INIT | tr -d '(' | tr -d ')' | tr -d '[' | tr -d ']' | awk '{print \$NF}' | tr -d '\n'");
+        if (!empty($latest_kernel_version)){
+            if ($kernel_version != $latest_kernel_version){
+                $kernel_update_tip = 'Kernel <a href="https://github.com/EPISOLrelease/EPISOL/tree/main/src/kernel"><u>'.$latest_kernel_version."</u></a> is available"; 
+            } else $kernel_update_tip = "Kernel is up to date";
+        }
+
+        if (!empty($main_update_tip)) echo('<br>'.$main_update_tip);
+        if (!empty($kernel_update_tip)) echo('<br>'.$kernel_update_tip);
+        if (!empty($main_update_tip) || !empty($kernel_update_tip)) echo ('<br><small><a href="help.php#update"><u>click me</u></a> to see how to update</small><br>');
+    }
     
     if (!empty($ver_fftw)){
         echo ('<br><b>fftw '.$ver_fftw.' installed</b><br>'."\n");
     } else {
-        if (empty($iet_bin)) echo ('<br><font color=red>Please install FFTW3, which is required by kernel</font></br>'."\n");
+        if (empty($iet_bin)) echo ('<br><font color=red>Please install FFTW3, which is required by kernel</font><br>'."\n");
         else echo ('<br>FFTW3 not installed<br>'."\n");
     }
 
@@ -50,7 +80,7 @@
         if (!empty($ver_gensolvent)) $kernel_components ++;
         if (!empty($ver_heatmap)) $kernel_components ++;
         if (!empty($ver_generate_idc)) $kernel_components ++;
-        echo ('<br><b>'.$software_name.' kernel '.$kernel_version.' installed</b><br>('.$kernel_components." components)\n");
+        echo ('<br><b>'.$software_name.' kernel '.$kernel_version.' installed</b><small><br>'.$kernel_components." components installed</small>\n");
         echo ('<br>'."\n");
         //echo ('<table>'."\n");
         //echo ('<tr><td> <li>'.$ver_rismhi3d.'</td></tr>');
@@ -60,40 +90,55 @@
         //if (!empty($ver_heatmap)) echo ('<tr><td> <li>'.$ver_heatmap.'</tr></td>');
         //echo ('</table>'."\n");
     } else {
-        echo ('<br><font color=red>Please install kernel</font></br>'."\n");
+        echo ('<br><font color=red><b>Kernel not installed</b></font><br>'."\n");
     }
 
-    $ver_gnuplot = shell_exec("gnuplot --version|head -n1|awk '{print $2}'");
+    $bin_gnuplot = shell_exec("command -v gnuplot");
+    $ver_gnuplot = empty($bin_gnuplot)? "" : shell_exec("gnuplot --version|head -n1|awk '{print $2}'");
     if (!empty($ver_gnuplot)){
         echo ("<br>gnuplot ".$ver_gnuplot." installed<br>");
     } else {
-        echo ('<br><font color=red>Please install gnuplot for analysing</font></br>'."\n");
+        echo ('<br>Gnuplot not installed<br><small>skip this if you don\'t want to plot RDFs</small><br>'."\n");
     }
 
-    $ver_convert = shell_exec("convert --version|head -n1|awk '{print $3}'");
+    $bin_convert = shell_exec("command -v convert");
+    $ver_convert = empty($bin_convert)? "" : shell_exec("convert --version|head -n1|awk '{print $3}'");
     if (!empty($ver_convert)){
         echo ("<br>ImageMagick ".$ver_convert." installed<br>");
-        echo ('<small>Please <a href="help.php#analysis_convert_eps" style="color:blue">click me</a> to see how to<br> allow ImageMagick to write EPS/PNG</small><br>');
+        echo ('<small>Please <a href="help.php#analysis_convert_eps" style="color:blue"><u>click me</u></a> to see how to configue<br> ImageMagick to write EPS/PNG</small><br>');
     } else {
-        echo ('<br><font color=red>Please install ImageMagick for analysing</font></br>'."\n");
+        echo ('<br>ImageMagick not installed<br><small>skip this if you don\'t want to plot images</small><br>'."\n");
     }
 
     echo ('  <br>');
     echo ('  <form action="install.php" method="post" style="display:inline;">'."\n");
-    echo ('    <input type="submit" '.(empty($fftw)?'':'style="color:red"').' name="fftw" value="'.(empty($ver_fftw)?'install':'reinstall').' fftw3" '.(empty($working)?'':'disabled="disabled"').' />'."\n");
-    echo ('    <input type="submit" '.(empty($main)?'':'style="color:red"').' name="main" value="'.(empty($iet_bin)?'install':'reinstall').' kernel" '.(empty($working)?'':'disabled="disabled"').' />'."\n");
 
-    if (!empty($fftw)||!empty($main)){
+    if (!empty($bin_tar) && !empty($bin_make)){
+        echo ('    <input type="submit" '.(empty($fftw)?'':'style="color:red"').' name="fftw" value="'.(empty($ver_fftw)?'install':'reinstall').' fftw3" '.(empty($working)?'':'disabled="disabled"').' />'."\n");
+        if (empty($ver_fftw)){
+            echo ('    <input type="submit" '.(empty($main)?'':'style="color:red"').' disabled value="'.(empty($iet_bin)?'install':'reinstall').' kernel" />'."\n");
+        } else {
+            echo ('    <input type="submit" '.(empty($main)?'':'style="color:red"').' name="main" value="'.(empty($iet_bin)?'install':'reinstall').' kernel" '.(empty($working)?'':'disabled="disabled"').' />'."\n");
+        }
+    } else {
+        echo ('    <input type="submit" '.(empty($fftw)?'':'style="color:red"').' disabled value="'.(empty($ver_fftw)?'install':'reinstall').' fftw3" />'."\n");
+        echo ('    <input type="submit" '.(empty($main)?'':'style="color:red"').' disabled value="'.(empty($iet_bin)?'install':'reinstall').' kernel" />'."\n");
+        echo ('    <br><font color=red>Can\'t '.(empty($iet_bin)?'install':'reinstall').', missing:'.(empty($bin_tar)?' <a href="https://www.gnu.org/software/tar/" style="color:red"><u><b>tar</b></u></a>':"").(empty($bin_tar)&&empty($bin_make)?" and":"").(empty($bin_make)?' <a href="https://www.gnu.org/software/make/" style="color:red"><u><b>make</b></u></a>':"").'</font>'."\n");
+    }
+
+    if (empty($bin_tar) || empty($bin_make)){
+    } else if (!empty($fftw)||!empty($main)){
         echo ('    <br><br><input type="submit" name="stop" value="Has installation finished? Click me to check"/>'."\n");
     } else if (empty($iet_bin)){
         echo ('    <br><br><input type="submit" name="stop" value="Has installation finished? Click me to check"/>'."\n");
     } else {
-        echo ('    <br><br><input type="submit" name="stop" value="Kernel installed, click me won\'t change anything"/>'."\n");
+        #echo ('    <br><br><input type="submit" name="stop" value="Kernel installed, click me won\'t change anything"/>'."\n");
+        #echo ('    <br><br>Kernel installed, go to <a href="iet.php">the next step</a>'."\n");  
     }
     echo ('  </form><br>'."\n");
 
     if (file_exists("src/stdout.txt")){
-        echo ('<br><a href="viewfile.php?scroll=bottom&u='.getcwd().'/src/stdout.txt&reload=3" target="_blank">Click me the see the installation log</a>'."\n");
+        echo ('<br><a href="viewfile.php?scroll=bottom&u='.getcwd().'/src/stdout.txt&reload=3" target="_blank">Click me the see the <u>installation log</u></a>'."\n");
     } else if (empty($iet_bin)){
         echo ('<br><small><a href="help.php#cannot_write_folder" style="color:#0080FF">Click me if you clicked installation buttons but<br> these two lines of blue text still exist</a></small>'."\n");
     }

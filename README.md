@@ -4,7 +4,7 @@
 
 The graphic interface to do IET calculations
 
-v 1.1.322 (c) 2022 Cao Siqin
+v 1.1.323 (c) 2022 Cao Siqin
 
 All rights reserved. You can use and modify the software under the [GNU Lesser General Public License v3](https://www.gnu.org/licenses/lgpl-3.0.en.html)
 
@@ -18,9 +18,9 @@ Extract the EPISOL package to a sub-folder of your website.
 
 ## Start EPISOL server with the build-in server of PHP
 
-php -S YOUR_IP_ADDRESS:A_PORT -t CWBSOL_ROOT_FOLDER
+php -S YOUR_IP_ADDRESS:A_PORT -t EPISOL_ROOT_FOLDER
 
-e.g.: php -S 127.0.0.1:8080 -t $HOME/Downloads/CWBSol-master
+e.g.: php -S 127.0.0.1:8080 -t $HOME/Downloads/EPISOL-master
 
 # Please install the kernel first
 
