@@ -26,7 +26,7 @@
         }
         var buf = "?"; if (work!="") buf += "do="+work;
         if (workspace_substr!="") buf += (work==""?"" : "&") + "workspace=" + workspace_substr;
-        var plist = [ "solute", "solvent", "traj", "np", "rc", "nr", "box", "log", "out", "verbo", "debug", "debugxc", "closure", "steprism", "stephi", "cr", "temperature", "save", "report", "display", "rdfbins", "rdfgrps", "fmt", "lsa", "ndiis", "delvv", "errtol", "sd", "enlv", "coulomb", "coul_p", "ignoreram" ];
+        var plist = [ "solute", "solvent", "traj", "np", "rc", "nr", "box", "log", "out", "verbo", "debug", "debugxc", "closure", "cf", "steprism", "stephi", "cr", "temperature", "save", "report", "display", "rdfbins", "rdfgrps", "fmt", "lsa", "ndiis", "delvv", "errtol", "sd", "enlv", "coulomb", "coul_p", "ignoreram" ];
         for (i=0; i<plist.length; i++){
             var value = document.getElementById(plist[i]).value;
             if (value != "") buf += "&" + plist[i] + "=" + document.getElementById(plist[i]).value;
@@ -236,7 +236,7 @@
         echo ('<tr><td><a href="help.php#iet_threads">Threads</a></td><td> <input type="text" id="np" name="np" value="'.$set->np.'" placeholder="-nt" style="width:40"/> threads </td></tr>'."\n");
         //echo ('<tr><td><a href="help.php#iet_threads">threads</a></td><td> <input type="text" id="np" name="np" value="'.$set->np.'" placeholder="-nt" style="width:40"/> threads, <input type="text" id="ntb" name="ntb" value="'.$set->ntb.'" placeholder="1" style="width:40"/> <a href="help.php#iet_batch">batch</a></td></tr>'."\n");
         echo ('<tr><td><a href="help.php#iet_grids">Grid number</a></td><td> <input type="text" id="nr" name="nr" value="'.$set->nr.'" /></td></tr>'."\n");
-        echo ('<tr><td><a href="help.php#iet_box">Default box</a></td><td> <input type="text" id="box" name="box" value="'.$set->box.'" /></td></tr>'."\n");
+        echo ('<tr><td><a href="help.php#iet_box">Default box</a></td><td> <input type="text" id="box" name="box" value="'.$set->box.'" placeholder="not set" /></td></tr>'."\n");
         echo ('<tr><td><a href="help.php#iet_rc">r cutoff</a></td><td> <input type="text" id="rc" name="rc" value="'.$set->rc.'" style="width:50"/> nm</td></tr>'."\n");
         echo ('<tr><td>Temperature</td><td> <input type="text" id="temperature" name="temperature" value="'.$set->temperature.'" style="width:50"/> K</td></tr>'."\n");
         echo ('<tr><td>Do RISM</td><td>');
@@ -245,6 +245,7 @@
           echo ('</select>'."\n");
           echo ('<input type="text" id="steprism" name="steprism" value="'.$set->steprism.'" style="width:40" /> steps'."\n");
         echo ("</td></tr>\n");
+        echo ('<tr><td><a href="help.php#closure_factor">Closure factor</a></td><td> <input type="text" id="cf" name="cf" value="'.$set->cf.'" placeholder="for PLHNC/BPGG/VM/MP"/></td></tr>'."\n");
         echo ('<tr><td>Do HI</td><td>');
           echo ('<input type="text" id="stephi" name="stephi" value="'.$set->stephi.'" style="width:40" /> steps <small>(0 step to skip)</small>'."\n");
         echo ("</td></tr>\n");
@@ -336,7 +337,7 @@
           echo ('<input type="checkbox" name="debugx" id="debugx" '.($set->debugxc&16?"checked":"").' onClick="checkbox_xor(\'debugx\',\'debugxc\',16)"> xvv </input>');
           echo ('<input type="checkbox" name="debugc" id="debugc" '.($set->debugxc&32?"checked":"").' onClick="checkbox_xor(\'debugc\',\'debugxc\',32)"> crc </input>');
         echo ("</td></tr>\n");
-        echo ('<tr><td><a href="help.php#iet_lsa">A of LES</a></td><td> <input type="text" id="lsa" name="lsa" value="'.$set->lsa.'" style="width:60"/></td>');
+        echo ('<tr><td><a href="help.php#iet_lsa">A of LES</a></td><td> <input type="text" id="lsa" name="lsa" value="'.$set->lsa.'" style="width:60" placeholder="0.3"/></td>');
         echo ('<tr><td><a href="help.php#iet_Coulomb">Electric interaction</a></td><td>');
           echo ('<select id="coulomb">');
           echo ('  <option value="Coulomb" '.(strcasecmp($set->coulomb,"Coulomb")==0?"selected=\"selected\"":"").'> Coulomb </option>');
@@ -345,12 +346,12 @@
           echo ('</select>'."\n");
           echo ('<input type="text" id="coul_p" name="coul_p" value="'.$set->coul_p.'" style="width:40" placeholder="param"/>'."\n");
         echo ("</td><td></td></tr>\n");
-        echo ('<tr><td><a href="help.php#iet_data_format">Data format</a></td><td> <input type="text" id="fmt" name="fmt" value="'.$set->fmt.'" style="width:60" /></td><td></td></tr>'."\n");
-        echo ('<tr><td><a href="help.php#iet_extend_xvv">DIIS depth</a></td><td> <input type="text" id="ndiis" name="ndiis" value="'.$set->ndiis.'" style="width:60" /></td><td></td></tr>'."\n");
-        echo ('<tr><td><a href="help.php#iet_delvv">Static mixing factor</a></td><td> <input type="text" id="delvv" name="delvv" value="'.$set->delvv.'" style="width:60" /></td><td></td></tr>'."\n");
-        echo ('<tr><td><a href="help.php#iet_dynamic_delvv">Dynamic mixing factor</a></td><td> <input type="text" id="enlv" name="enlv" value="'.$set->enlv.'" style="width:60" /></td></tr>'."\n");
-        echo ('<tr><td><a href="help.php#iet_errtol">Error tolerance</a> </td><td> <input type="text" id="errtol" name="errtol" value="'.$set->errtol.'" style="width:120" /></td></tr>'."\n");
-        echo ('<tr><td><a href="help.php#iet_sigdig">Significant digits</a> </td><td> <input type="text" id="sd" name="sd" value="'.$set->sd.'" style="width:60" /></td></tr>'."\n");
+        echo ('<tr><td><a href="help.php#iet_data_format">Data format</a></td><td> <input type="text" id="fmt" name="fmt" value="'.$set->fmt.'" style="width:60" placeholder="%11g" /></td><td></td></tr>'."\n");
+        echo ('<tr><td><a href="help.php#iet_extend_xvv">DIIS depth</a></td><td> <input type="text" id="ndiis" name="ndiis" value="'.$set->ndiis.'" style="width:60" placeholder="5" /></td><td></td></tr>'."\n");
+        echo ('<tr><td><a href="help.php#iet_delvv">Static mixing factor</a></td><td> <input type="text" id="delvv" name="delvv" value="'.$set->delvv.'" style="width:60" placeholder="1" /></td><td></td></tr>'."\n");
+        echo ('<tr><td><a href="help.php#iet_dynamic_delvv">Dynamic mixing factor</a></td><td> <input type="text" id="enlv" name="enlv" value="'.$set->enlv.'" style="width:60" placeholder="1" /></td></tr>'."\n");
+        echo ('<tr><td><a href="help.php#iet_errtol">Error tolerance</a> </td><td> <input type="text" id="errtol" name="errtol" value="'.$set->errtol.'" style="width:120" placeholder="1e-12" /></td></tr>'."\n");
+        echo ('<tr><td><a href="help.php#iet_sigdig">Significant digits</a> </td><td> <input type="text" id="sd" name="sd" value="'.$set->sd.'" style="width:60" placeholder="15"/></td></tr>'."\n");
         echo ('<tr><td><a href="help.php#iet_igram">Physical memory</a></td><td>'); echo ('<input type="text" id="ignoreram" name="ignoreram" value='.$set->ignoreram.' hidden />'."\n");
           echo ('<input type="checkbox" name="ignoreramc" id="ignoreramc" '.($set->ignoreram=="yes"?"checked":"").' onClick="checkbox_yesno(\'ignoreramc\',\'ignoreram\')"> <font color=red> allow to exceed</font> </input>');
         echo ("</tr>\n");
@@ -375,10 +376,10 @@
             echo ('<input type="submit" value="load saved settings" onclick="submit(\'load\', \'Do you want to load saved settings?\')" disabled />'."\n");
         }*/
         echo ('<input type="submit" value="save settings" onclick="submit(\'save\', \'Do you want to save current settings?\')" '.((empty($settingfile))?"disabled":"").'/>'."\n");
-        echo ('<input type="submit" value="perform calculation" style="font-weight:900" onclick="submit_run(\'calc\', \'Do you want to perform calculation?\n\nSettings will be saved as well.\')" '.($n_running_eprism3d>0?'disabled':'').'/>'."\n");
         echo ('<input type="submit" value="view run log" onclick=show_run_log() />'."\n");
-        echo ('<input type="submit" '.($n_running_eprism3d>0?'style="color:red"':'').' value="terminate all calculations" onclick="submit(\'term\', \'Do you want to terminate all calculations?\')" '.($n_running_eprism3d>0?'':'disabled').'/>'."\n");
         echo ('<input type="submit" id="safeload" name="safeload" class="safeload" value="Calculation finished? Click me to check" onclick="submit(\'\', \'\')" />'."\n");
+        echo ('<input type="submit" '.($n_running_eprism3d>0?'style="color:red"':'').' value="terminate all calculations" onclick="submit(\'term\', \'Do you want to terminate all calculations?\')" '.($n_running_eprism3d>0?'':'disabled').'/>'."\n");
+        echo ('<input type="submit" value="perform calculation" style="font-weight:900" onclick="submit_run(\'calc\', \'Do you want to perform calculation?\n\nSettings will be saved as well.\')" '.($n_running_eprism3d>0?'disabled':'').'/>'."\n");
     echo ("</div>\n");
 
     echo ("<hr width=95%/>\n");

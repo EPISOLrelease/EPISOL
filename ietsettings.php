@@ -7,7 +7,7 @@
         public $workspace;
         public $np,$ntb,$rc,$nr,$box;
         public $log,$out,$verbo,$debug,$debugxc;
-        public $closure,$steprism,$stephi,$cr,$temperature;
+        public $closure,$cf,$steprism,$stephi,$cr,$temperature;
         public $save,$report,$display,$rdfbins,$rdfgrps;
         public $fmt,$lsa,$xvvextend,$ndiis,$delvv,$errtol,$sd,$enlv,$coulomb,$coul_p;
         public $ignoreram;
@@ -32,6 +32,7 @@
         if (empty($set->debug      )) $set->debug       = $_GET["debug"]?? 0;
         if (empty($set->debugxc    )) $set->debugxc     = $_GET["debugxc"]?? 0;
         if (empty($set->closure    )) $set->closure     = $_GET["closure" ]?? "PSE3";
+        if (empty($set->cf         )) $set->cf          = $_GET["cf"      ]?? "";
         if (empty($set->steprism   )) $set->steprism    = $_GET["steprism"]?? 500;
         if (empty($set->stephi     )) $set->stephi      = $_GET["stephi"  ]?? 0;
         if (empty($set->cr         )) $set->cr          = $_GET["cr"      ]?? 0;
@@ -43,14 +44,14 @@
         if (empty($set->rdfbins    )) $set->rdfbins     = $_GET["rdfbins" ]?? 50;
         if (empty($set->rdfgrps    )) $set->rdfgrps     = $_GET["rdfgrps" ]?? "";
        // advanced options
-        if (empty($set->fmt        )) $set->fmt         = $_GET["fmt"     ]?? "14.7g";
-        if (empty($set->lsa        )) $set->lsa         = $_GET["lsa"     ]?? 0.3;
+        if (empty($set->fmt        )) $set->fmt         = $_GET["fmt"     ]?? "";
+        if (empty($set->lsa        )) $set->lsa         = $_GET["lsa"     ]?? "";
         if (empty($set->xvvextend  )) $set->xvvextend   = $_GET["xvvextend"]?? 0;
-        if (empty($set->ndiis      )) $set->ndiis       = $_GET["ndiis"   ]?? 5;
-        if (empty($set->delvv      )) $set->delvv       = $_GET["delvv"   ]?? 1;
-        if (empty($set->errtol     )) $set->errtol      = $_GET["errtol"  ]?? "0.0000001";
-        if (empty($set->sd         )) $set->sd          = $_GET["sd"      ]?? 7;
-        if (empty($set->enlv       )) $set->enlv        = $_GET["enlv"    ]?? 1;
+        if (empty($set->ndiis      )) $set->ndiis       = $_GET["ndiis"   ]?? "";
+        if (empty($set->delvv      )) $set->delvv       = $_GET["delvv"   ]?? "";
+        if (empty($set->errtol     )) $set->errtol      = $_GET["errtol"  ]?? "";
+        if (empty($set->sd         )) $set->sd          = $_GET["sd"      ]?? "";
+        if (empty($set->enlv       )) $set->enlv        = $_GET["enlv"    ]?? "";
         if (empty($set->coulomb    )) $set->coulomb     = $_GET["coulomb" ]?? "Coulomb";
         if (empty($set->coul_p     )) $set->coul_p      = $_GET["coul_p"  ]?? "";
         if (empty($set->ignoreram  )) $set->ignoreram   = $_GET["ignoreram"]?? "no";
@@ -71,6 +72,7 @@
         if (!empty($set->debug      )) $buf .= "    \$set->debug       = \"".$set->debug      ."\";\n";
         if (!empty($set->debugxc    )) $buf .= "    \$set->debugxc     = \"".$set->debugxc    ."\";\n";
         if (!empty($set->closure    )) $buf .= "    \$set->closure     = \"".$set->closure    ."\";\n";
+        if (!empty($set->cf         )) $buf .= "    \$set->cf          = \"".$set->cf         ."\";\n";
         if (!empty($set->steprism   )) $buf .= "    \$set->steprism    = \"".$set->steprism   ."\";\n";
         if (!empty($set->stephi     )) $buf .= "    \$set->stephi      = \"".$set->stephi     ."\";\n";
         if (!empty($set->cr         )) $buf .= "    \$set->cr          = \"".$set->cr         ."\";\n";
@@ -134,6 +136,7 @@
 
         $exec .= " -cmd ";
         if (!empty($set->closure    )) $exec .= " closure=".$set->closure    ;
+        if (!empty($set->cf         )) $exec .= " cf=".$set->cf;
         if (!empty($set->stephi) && $set->stephi>0) $exec .= " hi,step=".$set->stephi     ;
         if (!empty($set->steprism) && $set->steprism>0) $exec .= " rism,step=".$set->steprism   ;
         if (!empty($set->report) && $set->report != 0){
@@ -162,7 +165,7 @@
 
     function generate_param_url($set){
         $url = "?";
-        $plist = array("workspace", "solute", "solvent", "traj", "np", "ntb", "rc", "nr", "box", "log", "out", "verbo", "debug", "debugxc", "closure", "steprism", "stephi", "cr", "temperature", "save", "report", "display", "rdfbins", "rdfgrps", "fmt", "lsa", "xvvextend", "ndiis", "delvv", "errtol", "sd", "enlv", "coulomb", "coul_p", "ignoreram");
+        $plist = array("workspace", "solute", "solvent", "traj", "np", "ntb", "rc", "nr", "box", "log", "out", "verbo", "debug", "debugxc", "closure", "cf", "steprism", "stephi", "cr", "temperature", "save", "report", "display", "rdfbins", "rdfgrps", "fmt", "lsa", "xvvextend", "ndiis", "delvv", "errtol", "sd", "enlv", "coulomb", "coul_p", "ignoreram");
         foreach($plist as $key){
             $url .= (strlen($url)==1?"":"&").$key."=".$set->$key;
         }

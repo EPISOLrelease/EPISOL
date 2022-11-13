@@ -18,7 +18,7 @@
         view_file_by_id("filename", urlex);
     }
     function view_file_by_id(id_control, urlex=""){
-        document.getElementById("filetext").src = "viewfile.php?u="+document.getElementById(id_control).value+urlex;
+        document.getElementById("filetext").src = "viewfile.php?u="+document.getElementById(id_control).value+urlex+"&analysis=on";
     }
 </script>'."\n");
     include ("page_header_element.php");

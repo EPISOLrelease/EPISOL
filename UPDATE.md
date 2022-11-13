@@ -1,3 +1,12 @@
+# 1.1.324
+
+Nov 12, 2022
+
+Add: automatically compute free energies when opening IET log file in analysis.php
+
+Add the text box to set the closure factor &alpha; of PLHNC/BPGG/VM/MP closures
+
+
 # 1.1.323
 
 Nov 4, 2022

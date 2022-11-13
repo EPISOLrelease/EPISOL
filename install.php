@@ -1,6 +1,18 @@
 <?php
     $title = "install";
 
+    function compare_version_strings($ver1, $ver2){
+        if (empty($ver1) && empty($ver2)) return 0;
+        if (empty($ver1)) return -1;
+        if (empty($ver2)) return 1;
+        $vera1 = explode(".", $ver1);
+        $vera2 = explode(".", $ver2);
+        if (($vera1[0]??0)<($vera2[0]??0)) return -1; else if (($vera1[0]??0)>($vera2[0]??0)) return 1;
+        if (($vera1[1]??0)<($vera2[1]??0)) return -1; else if (($vera1[1]??0)>($vera2[1]??0)) return 1;
+        if (($vera1[2]??0)<($vera2[2]??0)) return -1; else if (($vera1[2]??0)>($vera2[2]??0)) return 1;
+        return 0;
+    }
+
     include ("header.php");
     include ("page_head.php");
     echo ("<script>\n");
@@ -47,22 +59,33 @@
         $main_update_tip = "";
         $latest_main_version = shell_exec("curl https://raw.githubusercontent.com/EPISOLrelease/EPISOL/main/header.php 2>/dev/null | grep software_version | tr -d '\"' | tr -d ';' | awk '{print \$NF}' | tr -d '\n'");
         if (!empty($latest_main_version)){
-            if ($software_version != $latest_main_version){
+            $main_ver_compare = compare_version_strings($software_version, $latest_main_version);
+            if ($main_ver_compare==0){
+                $main_update_tip = $software_name." is up to date";
+            } else if ($main_ver_compare<0){
                 $main_update_tip = $software_name.' <a href="https://github.com/EPISOLrelease/EPISOL"><u>'.$latest_main_version."</u></a> is available";
-            } else $main_update_tip = $software_name." is up to date";
+            } else {
+                $main_update_tip = 'Your '.$software_name.' is newer';
+            } 
         }
 
         $kernel_update_tip = "";
         $latest_kernel_version = shell_exec("curl https://raw.githubusercontent.com/seechin/EPRISM3D/main/configure.ac 2>/dev/null | grep AC_INIT | tr -d '(' | tr -d ')' | tr -d '[' | tr -d ']' | awk '{print \$NF}' | tr -d '\n'");
         if (!empty($latest_kernel_version)){
-            if ($kernel_version != $latest_kernel_version){
+            $kernel_ver_compare = compare_version_strings($kernel_version, $latest_kernel_version);
+            if ($kernel_ver_compare==0){
+                $kernel_update_tip = "Kernel is up to date";
+            } else if ($kernel_ver_compare<0){
                 $kernel_update_tip = 'Kernel <a href="https://github.com/EPISOLrelease/EPISOL/tree/main/src/kernel"><u>'.$latest_kernel_version."</u></a> is available"; 
-            } else $kernel_update_tip = "Kernel is up to date";
+            } else {
+                $kernel_update_tip = 'Your kernel is newer';
+            } 
         }
 
         if (!empty($main_update_tip)) echo('<br>'.$main_update_tip);
         if (!empty($kernel_update_tip)) echo('<br>'.$kernel_update_tip);
-        if (!empty($main_update_tip) || !empty($kernel_update_tip)) echo ('<br><small><a href="help.php#update"><u>click me</u></a> to see how to update</small><br>');
+        if (($main_ver_compare??0)<0 || ($kernel_ver_compare??0)<0) echo ('<br><small><a href="help.php#update"><u>click me</u></a> to see how to update</small>');
+        echo ("<br>\n");
     }
     
     if (!empty($ver_fftw)){

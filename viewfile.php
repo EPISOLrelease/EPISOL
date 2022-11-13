@@ -4,7 +4,7 @@
     $phpname = "viewfile.php";
     $rooturl = "/"; if (!empty($phpurl)) $rooturl = substr($phpurl, 0, strlen($phpurl)-strlen($phpname)); if ($rooturl=="/") $rooturl="";
 
-    function menu_bar($class, $alpha, $phpurl, $url, $scroll, $url_allow_edit, $filename, $filetype, $fn_noext, $dirname, $original, $reload){
+    function menu_bar($class, $alpha, $phpurl, $url, $scroll, $url_allow_edit, $filename, $filetype, $fn_noext, $dirname, $analysis, $reload){
         $chagereload = empty($reload)?"&reload=3":"";
 
         echo ('<body'.(empty($scroll)?'':' onload="document.body.scrollTop='.($scroll=="bottom"?99999999999:$scroll).'"').'>'."\n");
@@ -17,17 +17,24 @@
         }
         echo ('<div style="display:inline-block;float:right;">');
         //if ($url_allow_edit){
-        if (empty($original)){
-            echo ('  <div class="navbc" onclick=reload_page("'.$phpurl.'?u='.$url.$chagereload.'")>'.(empty($reload)?'Refresh':'StopRefreshing')."</div>\n");
+        if (!empty($analysis) && $analysis=="on"){
+            //echo ('  <div class="navbc" onclick=reload_page("'.$phpurl.'?u='.$url.$chagereload.'")>'.(empty($reload)?'Refresh':'StopRefreshing')."</div>\n");
+            echo ('  <div class="navbc" onclick=reload_page("'.$phpurl.'?u='.$url.$chagereload.'&analysis='.$analysis.'")>'.(empty($reload)?'Refresh':'StopRefreshing')."</div>\n");
         } else {
-            echo ('  <div class="navbc" onclick=reload_page("'.$phpurl.'?u='.$url.$chagereload.'&original='.$original.'")>'.(empty($reload)?'Refresh':'StopRefreshing')."</div>\n");
+            echo ('  <div class="navbc" onclick=reload_page("'.$phpurl.'?u='.$url.$chagereload.'")>'.(empty($reload)?'Refresh':'StopRefreshing')."</div>\n");
         }
         if ($url_allow_edit){
             if ($filetype==102||$filetype==103){
-                if (!empty($original) && $original=="on"){
-                    echo ('  <div class="navbc" onclick=reload_page("'.$phpurl.'?u='.$url.'")>ViewPlot</div>'."\n");
+                if (!empty($analysis) && $analysis=="on"){
+                    echo ('  <div class="navbc" onclick=reload_page("'.$phpurl.'?u='.$url.'")>ViewText</div>'."\n");
                 } else {
-                    echo ('  <div class="navbc" onclick=reload_page("'.$phpurl.'?u='.$url.'&original=on")>ViewText</div>'."\n");
+                    echo ('  <div class="navbc" onclick=reload_page("'.$phpurl.'?u='.$url.'&analysis=on")>ViewImage</div>'."\n");
+                }
+            } else if ($filetype==100){
+                if (!empty($analysis) && $analysis=="on"){
+                    echo ('  <div class="navbc" onclick=reload_page("'.$phpurl.'?u='.$url.'")>ViewOriginal</div>'."\n");
+                } else {
+                    echo ('  <div class="navbc" onclick=reload_page("'.$phpurl.'?u='.$url.'&analysis=on")>IET-Analysis</div>'."\n");
                 }
             }
             if (is_writable($url)){
@@ -59,7 +66,7 @@
     $fn_noext = substr($filename, 0, strlen($filename) - strlen($ext) - (substr($filename,strlen($filename)-strlen($ext)-1,1)=='.'?1:0));
   // inner keywords
     $frame = $_GET["frame"]?? "0";
-    $original = $_GET["original"]??"";
+    $analysis = $_GET["analysis"]??"";
     $edit = $_GET["edit"]??"";  // copy/move/rename/delete
     $dest = $_GET["dest"]??"";  // destination of copy/move/rename/delete
     $scroll = $_GET["scroll"]??"";
@@ -124,6 +131,9 @@
             $filetype = 2; 
         } else if (strcasecmp($ext, "php")==0){
             $filetype = 1; 
+        } else if (strcasecmp($ext, "log")==0){
+            $filetype = 100;
+            if ($reload>0) $analysis = ""; 
         } else if (strcasecmp($ext, "ts4s")==0){
             $filetype = 101;
         } else if (strcasecmp($ext, "rdf")==0){
@@ -172,6 +182,11 @@
     echo ("extension ".$ext."<br>\n");
     echo ("url_no_ext ".$url_noext."<br>\n");
     echo ("fn_no_ext ".$fn_noext."<br>\n");*/
+
+    if (assess_access_in($url, getcwd().'/run')) $url_allow_edit = true;
+    if (assess_access_in($url, getcwd().'/solute')) $url_allow_edit = true;
+    menu_bar("menubar", 0.2, $phpurl, $url, $scroll, $url_allow_edit, $filename, $filetype, $fn_noext, $dirname, $analysis, $reload);
+    $path_in_http = menu_bar("topbar", 1, $phpurl, $url, $scroll, $url_allow_edit, $filename, $filetype, $fn_noext, $dirname, $analysis, $reload);
 
     if ($url_allow_edit){
         if ($edit == "delete"){
@@ -237,12 +252,6 @@
             shell_exec ('chmod -R +w '.$url);
         }
     }
-
-    if (assess_access_in($url, getcwd().'/run')) $url_allow_edit = true;
-    if (assess_access_in($url, getcwd().'/solute')) $url_allow_edit = true;
-
-    menu_bar("menubar", 0.2, $phpurl, $url, $scroll, $url_allow_edit, $filename, $filetype, $fn_noext, $dirname, $original, $reload);
-    $path_in_http = menu_bar("topbar", 1, $phpurl, $url, $scroll, $url_allow_edit, $filename, $filetype, $fn_noext, $dirname, $original, $reload);
 
     if (!$url_allow_edit) $rebuild = "";
 
@@ -416,6 +425,21 @@
                     echo ('<div class="alert"><strong>Error</strong>: access denied : cannot display '.$filename.' (outside the server root folder)</div>');
                 }
                 echo ('</div>'."\n");
+            } else if ($filetype==100){  // text files
+                if (empty($analysis) || $analysis!="on"){
+                    echo ('<body>'."\n");
+                    echo ('<div class="container" style="width:100%;word-break:break-all;word-wrap:break-word">');
+                    echo ('<pre style="overflow-x:auto;white-space:pre-wrap;word-wrap:break-word">');
+                    echo (shell_exec("cat ".$url));
+                    echo ("</pre></div>");
+                } else {
+                    echo ('<body>'."\n");
+                    echo ('<div class="container" style="width:100%;word-break:break-all;word-wrap:break-word">');
+                    echo ('<pre style="overflow-x:auto;white-space:pre-wrap;word-wrap:break-word">');
+                    echo ('<big>Summary of '.$filename.":</big>\n\n");
+                    echo (shell_exec("cat ".$url." | awk -f ".getcwd()."/tools/view-iet-log.awk"));
+                    echo ("</pre></div>");
+                }
             } else if ($filetype==101){     // ts4s file
                 $extract_path = $url.".frame_".$frame;
                 $short_extract_path = basename($extract_path);
@@ -485,7 +509,7 @@
             } else if ($filetype==102 || $filetype==103){       // rdf or eps file
                 echo ("<body>\n");
                 echo ('<div style="word-break:break-all;word-wrap:break-word;overflow-y:scroll">'."\n");
-                if ($original){
+                if (empty($analysis) || $analysis!="on"){
                     echo ('<pre style="overflow-x:auto;white-space:pre-wrap;word-wrap:break-word">'.shell_exec("cat ".$url)."</pre>");
                 } else {
                     $url_gnuplot = $url_noext.".gnuplot"; $url_eps = $url_noext.".eps"; $url_png = $url_noext.".png";
