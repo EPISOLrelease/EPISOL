@@ -44,7 +44,7 @@
     $bin_tar = shell_exec("command -v tar");
     $bin_make = shell_exec("command -v make");
 
-    echo ('<div class="container" style="text-align:right"><small><a href="install.php?update=yes"><u>Check update</u></a><br></small></div>'."\n");
+    //echo ('<div class="container" style="text-align:right"><small><a href="install.php?update=yes"><u>Check update</u></a><br></small></div>'."\n");
 
     //$ver_fftw = ""; if (file_exists("src/fftw/fftw3/lib/libfftw3.a")) $ver_fftw = "3";
 
@@ -63,9 +63,9 @@
             if ($main_ver_compare==0){
                 $main_update_tip = $software_name." is up to date";
             } else if ($main_ver_compare<0){
-                $main_update_tip = $software_name.' <a href="https://github.com/EPISOLrelease/EPISOL"><u>'.$latest_main_version."</u></a> is available";
+                $main_update_tip = 'A newer version '.$software_name.' <a href="https://github.com/EPISOLrelease/EPISOL"><u>'.$latest_main_version."</u></a> is available";
             } else {
-                $main_update_tip = 'Your '.$software_name.' is newer';
+                $main_update_tip = 'Your have a newer version of '.$software_name;
             } 
         }
 
@@ -76,9 +76,9 @@
             if ($kernel_ver_compare==0){
                 $kernel_update_tip = "Kernel is up to date";
             } else if ($kernel_ver_compare<0){
-                $kernel_update_tip = 'Kernel <a href="https://github.com/EPISOLrelease/EPISOL/tree/main/src/kernel"><u>'.$latest_kernel_version."</u></a> is available"; 
+                $kernel_update_tip = 'A new kernel <a href="https://github.com/EPISOLrelease/EPISOL/tree/main/src/kernel"><u>'.$latest_kernel_version."</u></a> is available"; 
             } else {
-                $kernel_update_tip = 'Your kernel is newer';
+                $kernel_update_tip = 'Your have a newer version of kernel';
             } 
         }
 
@@ -86,7 +86,10 @@
         if (!empty($kernel_update_tip)) echo('<br>'.$kernel_update_tip);
         if (($main_ver_compare??0)<0 || ($kernel_ver_compare??0)<0) echo ('<br><small><a href="help.php#update"><u>click me</u></a> to see how to update</small>');
         echo ("<br>\n");
+    } else if (!empty($iet_bin)){
+         echo ('<br><a href="install.php?update=yes">Click me to <u>check for update</u></a><br>'."\n");
     }
+
     
     if (!empty($ver_fftw)){
         echo ('<br><b>fftw '.$ver_fftw.' installed</b><br>'."\n");

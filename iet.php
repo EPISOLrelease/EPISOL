@@ -26,7 +26,7 @@
         }
         var buf = "?"; if (work!="") buf += "do="+work;
         if (workspace_substr!="") buf += (work==""?"" : "&") + "workspace=" + workspace_substr;
-        var plist = [ "solute", "solvent", "traj", "np", "rc", "nr", "box", "log", "out", "verbo", "debug", "debugxc", "closure", "cf", "steprism", "stephi", "cr", "temperature", "save", "report", "display", "rdfbins", "rdfgrps", "fmt", "lsa", "ndiis", "delvv", "errtol", "sd", "enlv", "coulomb", "coul_p", "ignoreram" ];
+        var plist = [ "solute", "solvent", "traj", "np", "rc", "nr", "box", "log", "out", "verbo", "debug", "debugxc", "closure", "cf", "steprism", "stephi", "cr", "temperature", "save", "report", "rdfbins", "rdfgrps", "fmt", "lsa", "ndiis", "delvv", "errtol", "sd", "enlv", "coulomb", "coul_p", "ignoreram" ];
         for (i=0; i<plist.length; i++){
             var value = document.getElementById(plist[i]).value;
             if (value != "") buf += "&" + plist[i] + "=" + document.getElementById(plist[i]).value;
@@ -276,14 +276,14 @@
           //echo ('<input type="checkbox" name="report_cuv" id="report_cuv" '.($set->report&128?"checked":"").' onClick="checkbox_xor(\'report_cuv\',\'report\',128)">cuv </input>');
           echo ('<input type="checkbox" name="report_rdf" id="report_rdf" '.($set->report&256?"checked":"").' onClick="checkbox_xor(\'report_rdf\',\'report\',256)">rdf </input>');
         echo ("</td></tr>\n");
-        echo ('<tr><td>&nbsp&#8226 format</td><td>');
-          echo ('<select id="display">');
-          echo ('  <option value="table" '.($set->display=="table"?"selected=\"selected\"":"").'> Table </option>');
-          echo ('  <option value="list" '.($set->display=="list"?"selected=\"selected\"":"").'> List </option>');
-          echo ('</select><br>'."\n");
-           //echo ('<input type="checkbox" name="report" id="report" '.($set->report!=0?"checked":"").'>table </input>');
-           //echo ('<input type="checkbox" name="display" id="display" '.($set->display!=0?"checked":"").'>list </input>');
-        echo ("</td></tr>\n");
+        #echo ('<tr><td>&nbsp&#8226 format</td><td>');
+        #  echo ('<select id="display">');
+        #  echo ('  <option value="table" '.($set->display=="table"?"selected=\"selected\"":"").'> Table </option>');
+        #  echo ('  <option value="list" '.($set->display=="list"?"selected=\"selected\"":"").'> List </option>');
+        #  echo ('</select><br>'."\n");
+        #   //echo ('<input type="checkbox" name="report" id="report" '.($set->report!=0?"checked":"").'>table </input>');
+        #   //echo ('<input type="checkbox" name="display" id="display" '.($set->display!=0?"checked":"").'>list </input>');
+        #echo ("</td></tr>\n");
         echo ('<tr><td>&nbsp&#8226 <a href="help.php#iet_rdf_bins">rdf-bins</a></td><td> <input type="text" id="rdfbins" name="rdfbins" style="width:50" value="'.$set->rdfbins.'" /> <small>(number of RDF bins)</small></td></tr>'."\n");
         echo ('<tr><td>&nbsp&#8226 <a href="help.php#iet_rdf_grps">rdf-grps</a></td><td> <input type="textarea" id="rdfgrps" name="rdfgrps" value="'.$set->rdfgrps.'" style="width:200" placeholder="#atom1-#site1,#atom2-#site2,..."/></td></tr>'."\n");
         echo ('<tr><td>&nbsp&#8226 Verbose mode</td><td>');

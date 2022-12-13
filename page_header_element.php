@@ -19,9 +19,9 @@
         }
     } else {
         if (strcasecmp($title,"Install")==0){
-            echo ('  <a href="install.php"><div class="navba">Reinstall</div></a>'."\n");
+            echo ('  <a href="install.php"><div class="navba">Update</div></a>'."\n");
         } else {
-            echo ('  <a href="install.php"><div class="navbb">Reinstall</div></a>'."\n");
+            echo ('  <a href="install.php"><div class="navbb">Update</div></a>'."\n");
         }
     }
     /*if (!empty($gmxtop2solute)){

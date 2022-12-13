@@ -11,18 +11,46 @@ BEGIN {
     fit_all_cates[2] = "EXP";
 
     nuc = 0;
-    ss="FEP  PSE3   -702.709116407626   3.75516272446305  "; split(ss, ssa, " "); nuc++; for(j=1;j<=4;j++) uc[nuc,j] = ssa[j];
-    ss="EXP  PSE3   -671.765549800263  -2.41628665732753  "; split(ss, ssa, " "); nuc++; for(j=1;j<=4;j++) uc[nuc,j] = ssa[j];
-    ss="FEP  PSE2   -687.908213741747   3.5610101387673   "; split(ss, ssa, " "); nuc++; for(j=1;j<=4;j++) uc[nuc,j] = ssa[j];
-    ss="EXP  PSE2   -657.827776858667  -2.62655136107855  "; split(ss, ssa, " "); nuc++; for(j=1;j<=4;j++) uc[nuc,j] = ssa[j];
-    ss="FEP  KH     -647.348453608648   4.8547480416612   "; split(ss, ssa, " "); nuc++; for(j=1;j<=4;j++) uc[nuc,j] = ssa[j];
-    ss="EXP  KH     -620.040442692291  -1.46019183040039  "; split(ss, ssa, " "); nuc++; for(j=1;j<=4;j++) uc[nuc,j] = ssa[j];
-    ss="FEP  KGK    -462.53443482818    8.04130525293397  "; split(ss, ssa, " "); nuc++; for(j=1;j<=4;j++) uc[nuc,j] = ssa[j];
-    ss="EXP  KGK    -435.682618731393   1.65205408234999  "; split(ss, ssa, " "); nuc++; for(j=1;j<=4;j++) uc[nuc,j] = ssa[j];
-    ss="FEP  PLHNC  -710.548315106323   4.20537805720096  "; split(ss, ssa, " "); nuc++; for(j=1;j<=4;j++) uc[nuc,j] = ssa[j];
-    ss="EXP  PLHNC  -679.104895038278  -1.97945335051168  "; split(ss, ssa, " "); nuc++; for(j=1;j<=4;j++) uc[nuc,j] = ssa[j];
-    ss="FEP  HNC    -710.548315106323   4.20537805720096  "; split(ss, ssa, " "); nuc++; for(j=1;j<=4;j++) uc[nuc,j] = ssa[j];  # HNC is simply copied from PLHNC
-    ss="EXP  HNC    -679.104895038278  -1.97945335051168  "; split(ss, ssa, " "); nuc++; for(j=1;j<=4;j++) uc[nuc,j] = ssa[j];  # HNC is simply copied from PLHNC
+
+    #ss[++nuc]="FEP      KH  -624.168469765581    0";
+    #ss[++nuc]="EXP      KH  -627.012426149722    0";
+    #ss[++nuc]="FEP     KGK  -425.248535087388    0";
+    #ss[++nuc]="EXP     KGK  -428.022379386743    0";
+    #ss[++nuc]="FEP    PSE2  -668.747116955235    0";
+    #ss[++nuc]="EXP    PSE2   -671.96073432949    0";
+    #ss[++nuc]="FEP    PSE3  -681.838110075808    0";
+    #ss[++nuc]="EXP    PSE3  -685.195150013335    0";
+    #ss[++nuc]="FEP    PSE4  -686.450160715357    0";
+    #ss[++nuc]="EXP    PSE4  -691.669231883881    0";
+    #ss[++nuc]="FEP    PSE5  -688.525197069011    0";
+    #ss[++nuc]="EXP    PSE5  -695.178346803915    0";
+    #ss[++nuc]="FEP   PLHNC  -686.828594825657    0";  # fitted at alpha=3
+    #ss[++nuc]="EXP   PLHNC    -690.2696652787    0";  # fitted at alpha=3
+    #ss[++nuc]="FEP     HNC  -686.828594825657    0";  # HNC is simply copied from PLHNC
+    #ss[++nuc]="EXP     HNC    -690.2696652787    0";  # HNC is simply copied from PLHNC
+
+    ss[++nuc]=" FEP     KH  -647.348453608648    4.8547480416612";
+    ss[++nuc]=" EXP     KH  -619.952559990907  -1.47859772642391";
+    ss[++nuc]=" FEP    KGK   -462.53443482818   8.04130525293397";
+    ss[++nuc]=" EXP    KGK  -435.780764679989   1.67322083808028";
+    ss[++nuc]=" FEP   PSE2  -687.908213741747    3.5610101387673";
+    ss[++nuc]=" EXP   PSE2  -657.653298424423  -2.65897745235407";
+    ss[++nuc]=" FEP   PSE3  -702.709116407626   3.75516272446305";
+    ss[++nuc]=" EXP   PSE3  -671.598836677146  -2.44628209193456";
+    ss[++nuc]=" FEP   PSE4  -710.201646298877   4.17184421269326";
+    ss[++nuc]=" EXP   PSE4  -684.990022127642  -1.17317388291133";
+    ss[++nuc]=" FEP   PSE5  -714.134748976177   4.40755095859481";
+    ss[++nuc]=" EXP   PSE5  -692.678698950017 -0.430203751105637";
+    ss[++nuc]=" FEP  PLHNC  -710.548315106323   4.20537805720096";  # fitted at alpha=3
+    ss[++nuc]=" EXP  PLHNC  -678.964891475467   -2.0042752246319";  # fitted at alpha=3
+    ss[++nuc]=" FEP    HNC  -710.548315106323   4.20537805720096";  # HNC is simply copied from PLHNC
+    ss[++nuc]=" EXP    HNC  -678.964891475467   -2.0042752246319";  # HNC is simply copied from PLHNC
+
+
+
+    for (i=1;i<=nuc;i++){
+        split(ss[i], ssa, " "); for(j=1;j<=4;j++) uc[i,j] = ssa[j];
+    }
 
 } NF>0 {
     if (substr($1,length($1)-7,8)=="eprism3d"){
@@ -62,7 +90,7 @@ BEGIN {
     } else if (substr($1,1,7)=="solvent" && substr($1,length($1))==":"){
         gsub(/^[ \t]+/, "", $0);
         solvent_info[ninst] = $0;
-    } else if ($2=="Frame"){
+    } else if ($1==">" && ($2=="Frame" || substr($3,1,2)=="ps")){
         frames[ninst] ++;
         frame_box[ninst,frames[ninst]] = $4;
         frame_grid[ninst,frames[ninst]] = $(NF-1);
@@ -151,3 +179,4 @@ BEGIN {
   if (verbose>=1 && default_param_ever_used>0) printf("# [1] DOI: 10.26434/chemrxiv-2022-52cn3\n");
   if (ninst>0) printf("===============================================================================\n");
 }
+

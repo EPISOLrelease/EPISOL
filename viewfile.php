@@ -119,7 +119,7 @@
     $filetype = 0;
     if (!is_dir($url)){
         $finfo = finfo_open(FILEINFO_MIME);
-        $ftype = finfo_file($finfo, $dirname.'/'.$filename);
+        $ftype = file_exists($dirname.'/'.$filename)? finfo_file($finfo, $dirname.'/'.$filename) : "";
         if (substr($ftype, 0, 4) == 'text'){
             $filetype = 1;
         } else if (substr($ftype, 0, 5) == 'image'){

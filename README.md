@@ -4,29 +4,48 @@
 
 The graphic interface to do IET calculations
 
-v 1.1.324 (c) 2022 Cao Siqin
+v 1.1.325 (c) 2022 Cao Siqin
 
-All rights reserved. You can use and modify the software under the [GNU Lesser General Public License v3](https://www.gnu.org/licenses/lgpl-3.0.en.html)
+# Installation
 
-# Run EPISOL
+### System requirement:
 
-The EPISOL uses a server-client architecture for the GUI. The server side requires PHP (>=5), and the client side requires a web browser (Chrome, FireFox, Safari, Edge, etc. Internet Explorer not supported)
+The server side requires Linux/MacOS/WindowsWSL/Cygwin with the following software installed: php (>=5), bash, gcc (>=4.6), make, tar.
 
-## Start EPISOL server with Apache 2
+The client side requires a browser, e.g.: Chrome, Safari, Edge, Firefox, Opera. Internet Explorer is not supported. Since everything is stored in the server, the client side only needs HTML4 and JavaScript.
 
-Extract the EPISOL package to a sub-folder of your website.
+### Install the PHP
 
-## Start EPISOL server with the build-in server of PHP
+In most Linux distributions, php can be easily installed from apt (Debian/Ubuntu), yum (Fedora/RedHat/CentOS), zypper (SuSE), etc. In Linux and MacOS, php can also be installed via homebrew or anaconda.
 
-php -S YOUR_IP_ADDRESS:A_PORT -t EPISOL_ROOT_FOLDER
+If you want to compile PHP, please refer to the [php installation guide on Unix](https://www.php.net/manual/en/install.unix.php). EPISOL only uses the basic functions of PHP, so you don't need to enable any other packages when compiling the PHP. For example:
+```
+./configure --prefix=$HOME/php-8.1.12 --without-sqlite3 --without-pdo-sqlite --without-libxml --disable-xml --disable-dom --disable-simplexml --disable-xmlreader --disable-xmlwriter
+make
+make install
+```
 
-e.g.: php -S 127.0.0.1:8080 -t $HOME/Downloads/EPISOL-master
+### Start the EPISOL server
 
-# Please install the kernel first
+**Start EPISOL server with Apache 2**: extract the EPISOL package to a sub-folder of your website.
 
-The install page (install.php) provides the installation interface of two components: FFTW and the kernel of EPISOL. Install FFTW first, then install the kernel.
+**Start EPISOL server with the build-in server of PHP**:
+
+`php -S YOUR_IP_ADDRESS:A_PORT -t EPISOL_ROOT_FOLDER`
+
+e.g.: `php -S 127.0.0.1:8080 -t $HOME/Downloads/EPISOL-main`
+
+### Install the kernel 
+
+Nevigate to install.php (the second tab “Install” or “Reinstall” on the front page), which provides buttons to install two components: FFTW and the kernel of EPISOL. Install FFTW first, then install the kernel.
 
 Other optional tools required for data analysis: gnuplot and ImageMagick. System settings of ImageMagick is seen in the help page (help.php).
+
+
+# License
+
+You can use, modify or redistribute under the terms of the [GNU Lesser General Public License v3](https://www.gnu.org/licenses/lgpl-3.0.en.html)
+
 
 # References
 
