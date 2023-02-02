@@ -208,6 +208,11 @@ div.topbar::after {
     background-color: #EE1717; color: white;
     font-family:Arial;
 }
+.warning {
+    padding: 5px; margin-bottom: 15px;
+    background-color: #EE9020; color: white;
+    font-family:Arial;
+}
 .notify {
     padding: 5px; margin-bottom: 15px;
     background-color: green; color: white;

@@ -120,10 +120,10 @@ In <a href="analysis.php">the analysis page</a>, if you selected a RDF or EPS fi
 <center><div class="container" style="background-color:#EEEEEE"><h4>Others</h4></div></center>
 
 <p><div id="update"><b>How to update EPISOL</b></div>
-Download <a href="https://github.com/seechin/EPRISM3D"><u>EPISOL from Github</u></a> to a separate folder, and use rsync to overwrite the files in your existing EPISOL. After this, you need to reinstall the kernel in the <a href="install.php"><u>installation page</u></a>.
+Download <a href="https://github.com/seechin/EPRISM3D"><u>EPISOL from Github</u></a> to a separate folder, and use rsync to overwrite the files in your existing EPISOL. After this, you need to reinstall the kernel in the installation page</a>.
 
 <p><div id="update_kernel"><b>How to update the kernel</b></div>
-If you follow the above instructions to update the whole EPISOL, then the kernel is updated as well. If you want a separate update of the kernel, please download release.tar.gz from <a href="https://github.com/EPISOLrelease/EPISOL/tree/main/src/kernel"><u>the Github page</u></a> to replace the file of the same name at src/kernel/ sub-folder of the EPISOL. Then reinstall the kernel in the <a href="install.php"><u>installation page</u></a>.
+If you follow the above instructions to update the whole EPISOL, then the kernel is updated as well. If you want a separate update of the kernel, please download release.tar.gz from <a href="https://github.com/EPISOLrelease/EPISOL/tree/main/src/kernel"><u>the Github page</u></a> to replace the file of the same name at src/kernel/ sub-folder of the EPISOL. Then reinstall the kernel in the installation page</a>.
 
 
 </p><br>
@@ -135,13 +135,17 @@ If you follow the above instructions to update the whole EPISOL, then the kernel
     echo ('<center><div class="container">'."\n");
     echo ('<table style="width:95%;min-width:480;max-width:750;table-layout:fixed">'."\n");
         echo ('<tr>'."\n");
-        echo ('<td width=25% height=100><center><a href="install.php"><img src="images/Install.png" width=100 height=80 /></a></center></td>'."\n");
+        if ($maintenance_mode){
+            echo ('<td width=25% height=100><center><a href="install.php"><img src="images/Install.png" width=100 height=80 /></a></center></td>'."\n");
+        }
         echo ('<td width=25% height=100><center>'.(empty($iet_bin)?"":'<a href="iet.php">').'<img src="images/Solvate.png" width=100 height=80 />'.(empty($iet_bin)?"":'</a>').'</center></td>'."\n");
         echo ('<td width=25% height=100><center><a href="analysis.php"><img src="images/Analysis.png" width=100 height=80 />'.(empty($iet_bin)?"":'</a>').'</center></td>'."\n");
         echo ('<td width=25% height=100><center>'.(empty($iet_bin)?"":'<a href="help.php">').'<img src="images/TT.png" width=100 height=80 />'.(empty($iet_bin)?"":'</a>').'</center></td>'."\n");
         echo ('</tr>'."\n");
         echo ('<tr>'."\n");
-        echo ('<td><center><a href="install.php">'.(empty($iet_bin)?'Install':'Reinstall').'</a></center></td>'."\n");
+        if ($maintenance_mode){
+            echo ('<td><center><a href="install.php">'.(empty($iet_bin)?'Install':'Update').'</a></center></td>'."\n");
+        }
         echo ('<td><center>'.(empty($iet_bin)?"":'<a href="iet.php">').'IET calculations'.(empty($iet_bin)?"":'</a>').'</center></td>'."\n");
         echo ('<td><center><a href="analysis.php">Data analysis</center></a></td>'."\n");
         echo ('<td><center><a href="help.php">Help</a></center></td>'."\n");

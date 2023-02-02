@@ -7,9 +7,11 @@
     function menu_bar($class, $alpha, $phpurl, $url, $scroll, $url_allow_edit, $filename, $filetype, $fn_noext, $dirname, $analysis, $reload){
         $chagereload = empty($reload)?"&reload=3":"";
 
+        include ("header.php");
+
         echo ('<body'.(empty($scroll)?'':' onload="document.body.scrollTop='.($scroll=="bottom"?99999999999:$scroll).'"').'>'."\n");
         echo ('<div class="'.$class.'" style="opacity:'.$alpha.'"><div class="container">'."\n");
-        $path_in_http = (substr($url, 0, strlen(getcwd())+1)==getcwd().'/')? substr($url, strlen(getcwd())+1) : "";
+        $path_in_http = (substr($url, 0, strlen($software_home)+1)==$software_home.'/')? substr($url, strlen($software_home)+1) : "";
         if (!empty($path_in_http) && !is_dir($url)){
             echo ('  <a href="'.$path_in_http.'" target="_blank" onclick="return confirm(\'Sure to download file?\n\n'.$filename.'\')"><div class="navbc2" style="float:left" >'.$filename.'</div></a>');
         } else {
@@ -123,17 +125,17 @@
         if (substr($ftype, 0, 4) == 'text'){
             $filetype = 1;
         } else if (substr($ftype, 0, 5) == 'image'){
-            $filetype = 3; 
+            $filetype = 3;
         }
         if (strcasecmp($ext, "htm")==0){
-            $filetype = 2; 
+            $filetype = 2;
         } else if (strcasecmp($ext, "html")==0){
-            $filetype = 2; 
+            $filetype = 2;
         } else if (strcasecmp($ext, "php")==0){
-            $filetype = 1; 
+            $filetype = -2;
         } else if (strcasecmp($ext, "log")==0){
             $filetype = 100;
-            if ($reload>0) $analysis = ""; 
+            if ($reload>0) $analysis = "";
         } else if (strcasecmp($ext, "ts4s")==0){
             $filetype = 101;
         } else if (strcasecmp($ext, "rdf")==0){
@@ -174,8 +176,8 @@
     include ("page_head.php");
 
     $url_allow_edit = false;
-    if (assess_access_in($url, getcwd().'/run')) $url_allow_edit = true;
-    if (assess_access_in($url, getcwd().'/solute')) $url_allow_edit = true;
+    if (assess_access_in($url, $run_folder)) $url_allow_edit = true;
+    if (assess_access_in($url, $solute_folder)) $url_allow_edit = true;
 
     /*echo ("dirname ".$dirname."<br>\n");
     echo ("filename ".$filename."<br>\n");
@@ -183,8 +185,8 @@
     echo ("url_no_ext ".$url_noext."<br>\n");
     echo ("fn_no_ext ".$fn_noext."<br>\n");*/
 
-    if (assess_access_in($url, getcwd().'/run')) $url_allow_edit = true;
-    if (assess_access_in($url, getcwd().'/solute')) $url_allow_edit = true;
+    if (assess_access_in($url, $run_folder)) $url_allow_edit = true;
+    if (assess_access_in($url, $solute_folder)) $url_allow_edit = true;
     menu_bar("menubar", 0.2, $phpurl, $url, $scroll, $url_allow_edit, $filename, $filetype, $fn_noext, $dirname, $analysis, $reload);
     $path_in_http = menu_bar("topbar", 1, $phpurl, $url, $scroll, $url_allow_edit, $filename, $filetype, $fn_noext, $dirname, $analysis, $reload);
 
@@ -214,22 +216,29 @@
                 echo ('<div class="notify">'.$filename.' duplicated to '.$newname.'<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span></div>');
             }
         } else if ($edit == "rename"){
-            $newname = empty($ext)? $dirname.'/'.$dest : $dirname.'/'.$dest.'.'.$ext;
-            shell_exec ('mv '.$dirname.'/'.$filename.' '.$newname);
-            if (file_exists($url)){
-                echo ('<div class="alert"><strong>Error</strong>: cannot rename '.$filename.' to '.$dest.'.'.$ext.'<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span></div>');
+            $rename_dest = basename($dest);
+            $newname = empty($ext)? $dirname.'/'.$rename_dest : $dirname.'/'.$rename_dest.'.'.$ext;
+            if (assess_access_in($newname, $run_folder)) $url_allow_edit = true;
+            if (assess_access_in($newname, $solute_folder)) $url_allow_edit = true;
+            if (!$url_allow_edit){
+                echo ('<div class="alert"><strong>Error</strong>: access denied : cannot rename '.$filename.' to '.$newname.'<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span></div>');
             } else {
-                echo ('<div class="notify">'.$filename.' renamed to '.$dest.'.'.$ext.'<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span></div>');
-                $url = empty($ext)? $dirname.'/'.$dest : $dirname.'/'.$dest.'.'.$ext;
-                $filename = basename($url);
-                $url_noext = substr($url, 0, strlen($url) - strlen($ext) - (substr($url,strlen($url)-strlen($ext)-1,1)=='.'?1:0));
-                $fn_noext = substr($filename, 0, strlen($filename) - strlen($ext) - (substr($filename,strlen($filename)-strlen($ext)-1,1)=='.'?1:0));
+                shell_exec ('mv '.$dirname.'/'.$filename.' '.$newname);
+                if (file_exists($url)){
+                    echo ('<div class="alert"><strong>Error</strong>: cannot rename '.$filename.' to '.$rename_dest.'.'.$ext.'<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span></div>');
+                } else {
+                    echo ('<div class="notify">'.$filename.' renamed to '.$rename_dest.'.'.$ext.'<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span></div>');
+                    $url = empty($ext)? $dirname.'/'.$rename_dest : $dirname.'/'.$rename_dest.'.'.$ext;
+                    $filename = basename($url);
+                    $url_noext = substr($url, 0, strlen($url) - strlen($ext) - (substr($url,strlen($url)-strlen($ext)-1,1)=='.'?1:0));
+                    $fn_noext = substr($filename, 0, strlen($filename) - strlen($ext) - (substr($filename,strlen($filename)-strlen($ext)-1,1)=='.'?1:0));
+                }
             }
         } else if ($edit == "move"){
             $newdir = $dest; $newfile = $newdir.'/'.$filename;
             $url_allow_edit = false;
-            if (assess_access_in($newfile, getcwd().'/run')) $url_allow_edit = true;
-            if (assess_access_in($newfile, getcwd().'/solute')) $url_allow_edit = true;
+            if (assess_access_in($newfile, $run_folder)) $url_allow_edit = true;
+            if (assess_access_in($newfile, $solute_folder)) $url_allow_edit = true;
             if (!$url_allow_edit){
                 echo ('<div class="alert"><strong>Error</strong>: access denied : cannot move '.$filename.' to '.$newdir.'<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span></div>');
             } else {
@@ -284,140 +293,41 @@
             $access_readable = is_readable($url);
             $access_writeable = is_writable($url);
             $access_editable = $url_allow_edit;
-            $access_wwwvisit = assess_access_in($url, getcwd());
+            $access_wwwvisit = assess_access_in($url, $software_home);
             echo ('<pre>
   Folder:   <b>'.$filename.'</b>
   Location: <b>'.$url.'</b>
   Modified: '.(date("Y-m-d, D, H:i:s", filemtime($url) + $timezonesecond)).'
   Items:    '. count(glob($url."/*")).'
   Access:  '. ($access_readable?($access_writeable?' writable':' readonly'):' <font color=red>not-accessible</font>'). ($access_editable?", editable":", not editable").'
-  URL:      '. (empty($path_in_http)?(getcwd()==$url?'/':'<font color=#AA0000>(not available)</a>') : ('/'.$path_in_http)) .'
+  URL:      '. (empty($path_in_http)?($software_home==$url?'/':'<font color=#AA0000>(not available)</a>') : ('/'.$path_in_http)) .'
             </pre>'."\n");
             //echo ('<iframe name="dir" id="dir" src="/dir.php?path='.$url.'" width=100% height=100% frameborder=0></iframe>'."\n");
             echo ("\n".'</div></div>'."\n");
         } else {
-
-            /*$filetype = 0;
-
-            if ($filename=="stdout" || $filename=="stderr" || $filename==".settings.php"){
-                $filetype = 1;
-            } else if (empty($ext) && !is_executable($url)){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "txt")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "log")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "sh")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "h")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "c")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "cc")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "cpp")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "cxx")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "f")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "for")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "f77")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "f90")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "f03")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "f15")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "f22")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "py")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "tex")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "bib")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "bbl")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "gnuplot")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "pdb")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "gro")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "top")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "prmtop")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "itp")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "solute")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "gaff")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "amber03")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "css")==0){
-                $filetype = 1;
-            } else if (strcasecmp($ext, "htm")==0){
-                $filetype = 2;
-            } else if (strcasecmp($ext, "html")==0){
-                $filetype = 2;
-            } else if (strcasecmp($ext, "php")==0){
-                $filetype = -2;
-            } else if (strcasecmp($ext, "jpg")==0){
-                $filetype = 3;
-            } else if (strcasecmp($ext, "jpeg")==0){
-                $filetype = 3;
-            } else if (strcasecmp($ext, "gif")==0){
-                $filetype = 3;
-            } else if (strcasecmp($ext, "png")==0){
-                $filetype = 3;
-            } else if (strcasecmp($ext, "bmp")==0){
-                $filetype = 3;
-            } else if (strcasecmp($ext, "webp")==0){
-                $filetype = 3;
-            } else if (strcasecmp($ext, "ts4s")==0){
-                $filetype = 101;
-            } else if (strcasecmp($ext, "rdf")==0){
-                $filetype = 102;
-            } else if (strcasecmp($ext, "eps")==0){
-                $filetype = 103;
-            } else if (strcasecmp($ext, "tar")==0){
-                $filetype = 104;
-            } else if (strcasecmp($ext, "gz")==0){
-                $filetype = 104;
-            } else if (strcasecmp($ext, "zip")==0){
-                $filetype = 105;
-            }
-            */
-
-    //echo ("server document root:".$_SERVER['DOCUMENT_ROOT']."<br>\n");
-    //echo ("current path:".getcwd()."<br>\n");
-    //echo ("server root: ".$rooturl."<br>\n");
-    //echo ("file type: ".$filetype."<br>\n");
-
             if ($filetype==1 || $filetype==-1){  // text files
                 echo ('<body>'."\n");
                 echo ('<div class="container" style="width:100%;word-break:break-all;word-wrap:break-word">'); echo ('<pre style="overflow-x:auto;white-space:pre-wrap;word-wrap:break-word">');
+                echo ("<plaintext>\n");
                 echo (shell_exec("cat ".$url));
-                echo ("</pre></div>");
+                return ;
             } else if ($filetype==2){   // html files
+                echo ("<plaintext>\n");
                 echo (shell_exec("cat ".$url));
                 return ;
             } else if ($filetype==-2){  // php files
-                if (basename($url) != basename($phpurl)){
-                    include ($url);
+                /*if (basename($url) != basename($phpurl)){
+                    echo ('<div class="warning"><strong>Note</strong>: cannot display due to security concerns</div>');
                 } else {
-                    echo ('<div class="alert"><strong>Error</strong>: cannot display due to infinite recursion</div>');
-                }
+                    echo ('<div class="warning"><strong>Note</strong>: cannot display due to security concerns</div>');
+                }*/
+                echo ("<plaintext>\n");
+                echo (shell_exec("cat ".$url));
                 return ;
             } else if ($filetype==3){   // images
                 echo ("<body>\n");
                  echo ('<div style="overflow-y:scroll;overflow-x:scroll">'."\n");
-                $pwd = getcwd();
+                $pwd = $software_home;
                 if (substr($url, 0, strlen($pwd)) == $pwd){
                     echo ('<center><img src="'.$rooturl.substr($url, strlen($pwd), strlen($url)-strlen($pwd)).'" id="image" name="image" style="max-width:100%;max-height:100%" /></center>'."\n");
                     //echo ('<center><div class="container" style="position:absolute;bottom:0;">'.$filename.'</div></center>'."\n");
@@ -426,7 +336,17 @@
                 }
                 echo ('</div>'."\n");
             } else if ($filetype==100){  // text files
-                if (empty($analysis) || $analysis!="on"){
+                $view_log_analysis = true;
+                if (empty($analysis) || $analysis!="on") $view_log_analysis = false;
+                if ($view_log_analysis){
+                    //$begin_tasks =  (shell_exec("cat ".$url." | awk '$1==\"eprism3d\"&&$2==\"begins\"{begins++}END{print begins}'"));
+                    //$end_tasks =  (shell_exec("cat ".$url." | awk '$1==\"eprism3d\"&&$2==\"ends\"{ends++}END{print ends}'"));
+                    //if ($begin_tasks<=0 || $begin_tasks!=$end_tasks) $view_log_analysis = false;
+                    $running_task = shell_exec("cat ".$url." | awk '$1==\"eprism3d\"&&$2==\"begins\"{run=1}$1==\"eprism3d\"&&$2==\"ends\"{run=0}END{print run}'");
+                    if ($running_task>0) $view_log_analysis = false;
+                }
+                # awk '{if($1=="eprism3d"&&$2=="begins")tasks++;if($1=="eprism3d"&&$2=="ends")tasks--;}END{print tasks}'
+                if (!$view_log_analysis){
                     echo ('<body>'."\n");
                     echo ('<div class="container" style="width:100%;word-break:break-all;word-wrap:break-word">');
                     echo ('<pre style="overflow-x:auto;white-space:pre-wrap;word-wrap:break-word">');
@@ -437,7 +357,7 @@
                     echo ('<div class="container" style="width:100%;word-break:break-all;word-wrap:break-word">');
                     echo ('<pre style="overflow-x:auto;white-space:pre-wrap;word-wrap:break-word">');
                     echo ('<big>Summary of '.$filename.":</big>\n\n");
-                    echo (shell_exec("cat ".$url." | awk -f ".getcwd()."/tools/view-iet-log.awk"));
+                    echo (shell_exec("cat ".$url." | awk -f ".$software_home."/tools/view-iet-log.awk"));
                     echo ("</pre></div>");
                 }
             } else if ($filetype==101){     // ts4s file
@@ -518,7 +438,7 @@
                         if ($filetype==103) shell_exec("bash tools/build-png-from-eps.sh ".$url_noext);
                     }
                     if (file_exists($url_png) && filemtime($url_png) >= filemtime($url)){
-                        $pwd = getcwd();
+                        $pwd = $software_home;
                         echo ('<center><img src="'.$rooturl.substr($url_png, strlen($pwd), strlen($url_png)-strlen($pwd)).'" style="max-width:100%;max-height:100%"/></center>'."\n");
                         //echo ('<center><div class="container" style="position:absolute;bottom:0;">'.$filename.' -> <b>'.$fn_noext.'.png</b></div></center>'."\n");
                     } else echo ('<pre style="overflow-x:auto;white-space:pre-wrap;word-wrap:break-word">'.shell_exec("cat ".$url)."</pre>");

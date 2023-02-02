@@ -12,13 +12,15 @@
         public $fmt,$lsa,$xvvextend,$ndiis,$delvv,$errtol,$sd,$enlv,$coulomb,$coul_p;
         public $ignoreram;
         public $solute,$solvent,$traj;
+        public $additional;
     }
     function init_settings($set){
+        include("header.php");
       // load settings from URL
        // files
         if (empty($set->workspace  )) $set->workspace   = $_GET["workspace"]?? "";
         if (empty($set->solute     )) $set->solute      = $_GET["solute"]?? "";
-        if (empty($set->solvent    )) $set->solvent     = $_GET["solvent"]?? getcwd()."/solvent/tip3p-amber14.01A.gaff";
+        if (empty($set->solvent    )) $set->solvent     = $_GET["solvent"]?? $solvent_folder."/tip3p-amber14.01A.gaff";
         if (empty($set->traj       )) $set->traj        = $_GET["traj"]?? "";
        // basic options
         if (empty($set->np         )) $set->np          = $_GET["np"   ]?? "";
@@ -55,6 +57,8 @@
         if (empty($set->coulomb    )) $set->coulomb     = $_GET["coulomb" ]?? "Coulomb";
         if (empty($set->coul_p     )) $set->coul_p      = $_GET["coul_p"  ]?? "";
         if (empty($set->ignoreram  )) $set->ignoreram   = $_GET["ignoreram"]?? "no";
+      // additional options
+        if (empty($set->additional )) $set->additional  = $_GET["additional"]?? "";
     }
     function save_settings($set, $file){
         $buf = "<?php\n";
@@ -93,12 +97,14 @@
         if (!empty($set->coulomb    )) $buf .= "    \$set->coulomb     = \"".$set->coulomb    ."\";\n";
         if (!empty($set->coul_p     )) $buf .= "    \$set->coul_p      = \"".$set->coul_p     ."\";\n";
         if (!empty($set->ignoreram  )) $buf .= "    \$set->ignoreram   = \"".$set->ignoreram  ."\";\n";
+        if (!empty($set->additional )) $buf .= "    \$set->additional  = \"".$set->additional ."\";\n";
         $buf .= "?>\n";
         $fp = fopen($file, "w"); fwrite($fp, $buf); fclose($fp);
     }
     function generate_calc_command($set, $eprism3d){
+        include ("header.php");
         $exec = $eprism3d;
-        $pwd_relocated = false; if (is_dir(getcwd().'/run/'.$set->workspace)){
+        $pwd_relocated = false; if (is_dir($run_folder.'/'.$set->workspace)){
             $exec .= " -pwd run/".$set->workspace  ; $pwd_relocated = true;
         } else {
             $exec .= " -pwd run";
@@ -132,6 +138,7 @@
         if (!empty($set->coulomb    )) $exec .= " -coulomb ".$set->coulomb    ;
             if (!empty($set->coul_p )) $exec .= " ".$set->coul_p;
         if (!empty($set->ignoreram)) if ($set->ignoreram=="yes") $exec .= " -ignore-ram";
+        if (!empty($set->additional)) $exec .= " ".$set->additional;
         if (!empty($set->cr)) $exec .= " -cr";
 
         $exec .= " -cmd ";

@@ -1,15 +1,15 @@
 <?php
+    include ("header.php");
 
     $title = "iet";
     $phpurl = "iet.php";
     //$runurl = "/runiet.php";
-    $workspace_root = getcwd()."/run";
+    $workspace_root = $run_folder;
 
     include ("ietsettings.php");
 
     $set = new IETSettings;
 
-    include ("header.php");
     include ("page_head.php");
 
 ?>
@@ -26,7 +26,7 @@
         }
         var buf = "?"; if (work!="") buf += "do="+work;
         if (workspace_substr!="") buf += (work==""?"" : "&") + "workspace=" + workspace_substr;
-        var plist = [ "solute", "solvent", "traj", "np", "rc", "nr", "box", "log", "out", "verbo", "debug", "debugxc", "closure", "cf", "steprism", "stephi", "cr", "temperature", "save", "report", "rdfbins", "rdfgrps", "fmt", "lsa", "ndiis", "delvv", "errtol", "sd", "enlv", "coulomb", "coul_p", "ignoreram" ];
+        var plist = [ "solute", "solvent", "traj", "np", "rc", "nr", "box", "log", "out", "verbo", "debug", "debugxc", "closure", "cf", "steprism", "stephi", "cr", "temperature", "save", "report", "rdfbins", "rdfgrps", "fmt", "lsa", "ndiis", "delvv", "errtol", "sd", "enlv", "coulomb", "coul_p", "ignoreram", "additional" ];
         for (i=0; i<plist.length; i++){
             var value = document.getElementById(plist[i]).value;
             if (value != "") buf += "&" + plist[i] + "=" + document.getElementById(plist[i]).value;
@@ -85,16 +85,21 @@
 
   // do commands before loading the page
 
-    //$settingfile = getcwd()."settings_iet.php";
-
-    if (!file_exists(getcwd()."run")) shell_exec("mkdir ".getcwd()."/run");
-    if (!file_exists(getcwd()."run/default")) shell_exec("mkdir ".getcwd()."/run/default");
+    //if (!file_exists(getcwd()."run")) shell_exec("mkdir ".getcwd()."/run");
+    //if (!file_exists(getcwd()."run/default")) shell_exec("mkdir ".getcwd()."/run/default");
+    if (!file_exists($run_folder)) shell_exec("mkdir ".$run_folder);
+    if (!file_exists($run_folder."/default")) shell_exec("mkdir ".$run_folder."/default");
 
     $settingfile = "";
+    //if (empty($set->workspace)){
+    //    $settingfile = getcwd()."run/settings_iet.php";
+    //} else if (!empty($set->workspace) && is_dir(getcwd().'/run/'.$set->workspace)){
+    //    $settingfile = getcwd().'/run/'.$set->workspace.'/.settings.php';
+    //}
     if (empty($set->workspace)){
-        $settingfile = getcwd()."run/settings_iet.php";
-    } else if (!empty($set->workspace) && is_dir(getcwd().'/run/'.$set->workspace)){
-        $settingfile = getcwd().'/run/'.$set->workspace.'/.settings.php';
+        $settingfile = $run_folder."/settings_iet.php";
+    } else if (!empty($set->workspace) && is_dir($run_folder.'/'.$set->workspace)){
+        $settingfile = $run_folder.'/'.$set->workspace.'/.settings.php';
     }
 
     if (!empty($do)){
@@ -103,7 +108,7 @@
             if (!empty($settingfile) && file_exists($settingfile)){
                 echo ('<script>window.onload = window.location.replace("'.($phpurl.generate_param_url($set)).'");</script>'."\n");
             } else {
-                echo ('<div class="alert"><strong>Error</strong>: can\'t save settings'.(!empty($set->workspace)?(is_dir(getcwd().'/run/'.$set->workspace)?' to workspace ':' to non-existing workspace ').$set->workspace:'').' <span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span></div>');
+                echo ('<div class="alert"><strong>Error</strong>: can\'t save settings'.(!empty($set->workspace)?(is_dir($run_folder.'/'.$set->workspace)?' to workspace ':' to non-existing workspace ').$set->workspace:'').' <span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span></div>');
             }
         } else if (strcasecmp($do, "load") == 0){   // load settings
             if (!empty($settingfile) && file_exists($settingfile)){
@@ -113,7 +118,7 @@
                 echo ('<div class="alert"><strong>Error</strong>: can\'t load settings as it hasn\'t been saved before <span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span></div>');
             }
         } else if (strcasecmp($do, "calc") == 0){   // do calculation
-            if (!empty($set->workspace) && !is_dir(getcwd().'/run/'.$set->workspace)){
+            if (!empty($set->workspace) && !is_dir($run_folder.'/'.$set->workspace)){
                 echo ('<div class="alert"><strong>Error</strong>: can\'t do calculations : please create workspace '.$set->workspace.' first <span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span></div>');
             } else {
                 if (!empty($settingfile)) save_settings($set, $settingfile);
@@ -124,7 +129,7 @@
                   // solute is a top file: convert it to solute first
                     $fn_noext = substr($filename, 0, strlen($filename) - strlen($ext) - (substr($filename,strlen($filename)-strlen($ext)-1,1)=='.'?1:0));
                     $topfile = $set->solute;
-                    $solutefile = getcwd().'solute/'.$fn_noext.'.solute';
+                    $solutefile = $solute_folder.'/'.$fn_noext.'.solute';
                     $set->solute = $solutefile;
                     $exec = $gmxtop2solute.' -ab -top '.$topfile.' -o '.$solutefile.';';
                     $exec .= generate_calc_command($set, $rismhi3d);
@@ -153,7 +158,7 @@
         } else if (strcasecmp($do, "view_log") == 0){
             $logfile = empty($set->log)? "stdout.txt" : $set->log;
             if (!empty($set->workspace)) $logfile = $set->workspace.'/'.$logfile;
-            echo ('<script>window.onload = window.location.replace("'.('viewfile.php?scroll=bottom&u='.getcwd().'/run/'.$logfile."&reload=3").'");</script>'."\n");
+            echo ('<script>window.onload = window.location.replace("'.('viewfile.php?scroll=bottom&u='.$run_folder.'/'.$logfile."&reload=3").'");</script>'."\n");
         }
     }
 
@@ -218,11 +223,11 @@
         echo ('<input type="text" id="traj" name="traj" value="" style="width:100%" hidden />');
       echo ('</td></tr>'."\n");
       echo ('<tr><td>'."\n");
-        echo ('<iframe name="solvent_list" id="solvent_list" src="dir.php?path='.(!empty($set->solvent)?$set->solvent:getcwd().'/solvent').'" width=100% frameborder=0 onLoad="set_text_from_iframe(\'solvent\', \'solvent_list\')"></iframe>'."\n");
+        echo ('<iframe name="solvent_list" id="solvent_list" src="dir.php?path='.(!empty($set->solvent)?$set->solvent:$solvent_folder).'" width=100% frameborder=0 onLoad="set_text_from_iframe(\'solvent\', \'solvent_list\')"></iframe>'."\n");
         echo ('</td><td>'."\n");
-        echo ('<iframe name="solute_list" id="solute_list" src="dir.php?c=.solute,.top,.prmtop&path='.(!empty($set->solute)?$set->solute:getcwd().'/solute').'" width=100% frameborder=0 onLoad="set_text_from_iframe(\'solute\', \'solute_list\')"></iframe>'."\n");
+        echo ('<iframe name="solute_list" id="solute_list" src="dir.php?c=.solute,.top,.prmtop&path='.(!empty($set->solute)?$set->solute:$solute_folder).'" width=100% frameborder=0 onLoad="set_text_from_iframe(\'solute\', \'solute_list\')"></iframe>'."\n");
         echo ('</td><td >'."\n");
-        echo ('<iframe name="traj_list" id="traj_list" src="dir.php?c=.pdb,.gro,.xtc&path='.(!empty($set->traj)?$set->traj:getcwd().'/solute').'" width=100% frameborder=0 onLoad="set_text_from_iframe(\'traj\', \'traj_list\')"></iframe>'."\n");
+        echo ('<iframe name="traj_list" id="traj_list" src="dir.php?c=.pdb,.gro,.xtc&path='.(!empty($set->traj)?$set->traj:$solute_folder).'" width=100% frameborder=0 onLoad="set_text_from_iframe(\'traj\', \'traj_list\')"></iframe>'."\n");
       echo ('</td></tr>'."\n");
       echo ("</table>\n");
     echo ('</div>'."\n");
@@ -294,8 +299,7 @@
           echo ('</select>'."\n");
         echo ("</td></tr>\n");
 
-
-
+        echo ('<tr><td><a href="help.php#iet_data_format">Data format</a></td><td> <input type="text" id="fmt" name="fmt" value="'.$set->fmt.'" style="width:60" placeholder="%11g" /></td><td></td></tr>'."\n");
 
         echo ('<tr><td>Output file</td><td> <input type="text" id="out" name="out" value="'.$set->out.'" placeholder="autogenerated" /></td></tr>'."\n");
 
@@ -346,7 +350,6 @@
           echo ('</select>'."\n");
           echo ('<input type="text" id="coul_p" name="coul_p" value="'.$set->coul_p.'" style="width:40" placeholder="param"/>'."\n");
         echo ("</td><td></td></tr>\n");
-        echo ('<tr><td><a href="help.php#iet_data_format">Data format</a></td><td> <input type="text" id="fmt" name="fmt" value="'.$set->fmt.'" style="width:60" placeholder="%11g" /></td><td></td></tr>'."\n");
         echo ('<tr><td><a href="help.php#iet_extend_xvv">DIIS depth</a></td><td> <input type="text" id="ndiis" name="ndiis" value="'.$set->ndiis.'" style="width:60" placeholder="5" /></td><td></td></tr>'."\n");
         echo ('<tr><td><a href="help.php#iet_delvv">Static mixing factor</a></td><td> <input type="text" id="delvv" name="delvv" value="'.$set->delvv.'" style="width:60" placeholder="1" /></td><td></td></tr>'."\n");
         echo ('<tr><td><a href="help.php#iet_dynamic_delvv">Dynamic mixing factor</a></td><td> <input type="text" id="enlv" name="enlv" value="'.$set->enlv.'" style="width:60" placeholder="1" /></td></tr>'."\n");
@@ -354,6 +357,7 @@
         echo ('<tr><td><a href="help.php#iet_sigdig">Significant digits</a> </td><td> <input type="text" id="sd" name="sd" value="'.$set->sd.'" style="width:60" placeholder="15"/></td></tr>'."\n");
         echo ('<tr><td><a href="help.php#iet_igram">Physical memory</a></td><td>'); echo ('<input type="text" id="ignoreram" name="ignoreram" value='.$set->ignoreram.' hidden />'."\n");
           echo ('<input type="checkbox" name="ignoreramc" id="ignoreramc" '.($set->ignoreram=="yes"?"checked":"").' onClick="checkbox_yesno(\'ignoreramc\',\'ignoreram\')"> <font color=red> allow to exceed</font> </input>');
+        echo ('<tr><td>Other options</td><td> <input type="text" id="additional" name="additional" value="'.$set->additional.'" style="width:120" placeholder="" /></td><td></td></tr>'."\n");
         echo ("</tr>\n");
     echo ('</table></div>'."\n");
 

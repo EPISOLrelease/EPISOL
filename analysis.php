@@ -1,11 +1,11 @@
 <?php
+    include ("header.php");
     $title = "analysis";
     $phpurl = "analysis.php";
 
     $url = $_POST["filename"]?? "";
-    if (empty($url)) $url = $_GET["filename"]?? getcwd().'/run';
+    if (empty($url)) $url = $_GET["filename"]?? $run_folder;
 
-    include ("header.php");
     include ("page_head.php");
     echo ('<script>
     function set_text_from_iframe(id_text, id_iframe){

@@ -17,20 +17,13 @@
         } else {
             echo ('  <a href="install.php"><div class="navbb">Install</div></a>'."\n");
         }
-    } else {
+    } else if ($maintenance_mode){
         if (strcasecmp($title,"Install")==0){
             echo ('  <a href="install.php"><div class="navba">Update</div></a>'."\n");
         } else {
             echo ('  <a href="install.php"><div class="navbb">Update</div></a>'."\n");
         }
     }
-    /*if (!empty($gmxtop2solute)){
-        if (strcasecmp($title,"top2solute")==0){
-            echo ('  <a href="gmxtop2solute.php"><div class="navba">Top2Solute</div></a>'."\n");
-        } else {
-            echo ('  <a href="gmxtop2solute.php"><div class="navbb">Top2Solute</div></a>'."\n");
-        }
-    }*/
     if (!empty($rismhi3d)){
         if (strcasecmp($title,"IET")==0){
             echo ('  <a href="iet.php"><div class="navba">IET</div></a>'."\n");

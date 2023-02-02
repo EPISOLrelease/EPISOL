@@ -1,3 +1,12 @@
+# 1.1.326
+
+Jan 8, 2023
+
+Important bug fix for workspace folder not working
+
+Important bug fix of kernel
+
+
 # 1.1.325
 
 Dec 13, 2022
@@ -32,7 +41,7 @@ Improved the logic of interface for ease of use. E.g.: installation log and IET 
 
 Oct 23, 2022
 
-Support Apache2 websites 
+Support Apache2 websites
 
 
 # 1.1.320
@@ -49,5 +58,3 @@ gmxtop2solute.php also generates IDC-corrected solute files, unless no atom to c
 June 3, 2022
 
 License changed to LGPL3 from GPL3.
-
-

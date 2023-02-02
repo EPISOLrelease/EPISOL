@@ -97,10 +97,11 @@
     if (count($files_scan)>0){
         for ($i=0; $i<count($files_scan); $i++){
             $files_attr[$i] = 0; // normal files
+            if ($files_scan[$i]=="." || $files_scan[$i]=="..") $files_attr[$i] += 32; // hidden files
             if ($sortfile==1||$sortfile==2){
-                if ($files_scan[$i]=="." || $files_scan[$i]=="..") $files_attr[$i] += 32; // hidden files
-            } else {
-                if (substr($files_scan[$i],0,1)==".") $files_attr[$i] += 32; // hidden files
+            //    if ($files_scan[$i]=="." || $files_scan[$i]=="..") $files_attr[$i] += 32; // hidden files
+            //} else {
+            //    if (substr($files_scan[$i],0,1)==".") $files_attr[$i] += 32; // hidden files
             }
             if (is_dir($rootfolder.$url."/".$files_scan[$i])) $files_attr[$i] += 1; // folder
             if ($nfilters>0 && !($files_attr[$i]&1)){ $match = false;

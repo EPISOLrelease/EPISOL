@@ -1,8 +1,8 @@
 <?php
+    include ("header.php");
 
     $title = "top2solute";
 
-    include ("header.php");
     include ("page_head.php");
 
     echo ("<script>\n");
@@ -39,8 +39,8 @@
 
     echo ('<form action="gmxtop2solute.php" method="post" style="display:inline;">'."\n");
       echo ('<table><tr><td>'."\n");
-        echo ('$GMXDATA folder:</td><td>');
-        echo ('<input type="text" id="lib" name="lib" value="'.(empty($lib)?"":$lib).'" style="width:350" placeholder="The folder defined in $GMXDATA. Source GMXRC or type it here."/><br>');
+        echo ('Forcefield folder:</td><td>');
+        echo ('<input type="text" id="lib" name="lib" value="'.(empty($lib)?"":$lib).'" style="width:350" placeholder="$GMXDATA/top folder. Source GMXRC or type it here."/><br>');
         echo ('</td></tr><tr><td>'."\n");
         echo ('Gromacs top file:</td><td>');
         echo ('<input type="text" id="top" name="top" value="" style="width:350"/>');
@@ -55,7 +55,7 @@
     if (!empty($top)){
         echo ('<table style="width:90%;height:300;table-layout:fixed"><tr><td style="width:40%">'."\n");
     }
-    echo ('<iframe name="gmxdir" id="gmxdir" src="dir.php?c=.top&path='.(empty($top)?getcwd():$top).'" width='.(empty($top)?"90%":"100%").' height='.(empty($top)?"300":"100%").' frameborder=0 onLoad="set_text_from_iframe(\'top\', \'gmxdir\')"></iframe>'."\n");
+    echo ('<iframe name="gmxdir" id="gmxdir" src="dir.php?c=.top&path='.(empty($top)?$solute_folder:$top).'" width='.(empty($top)?"90%":"100%").' height='.(empty($top)?"300":"100%").' frameborder=0 onLoad="set_text_from_iframe(\'top\', \'gmxdir\')"></iframe>'."\n");
     if (!empty($btop)){
         echo ('</td><td style="width:60%;">'."\n");
         echo ('<div style="width:100%;height:100%;background-color:#F8F8F8;word-wrap:break-word;overflow-y:scroll">'."\n");

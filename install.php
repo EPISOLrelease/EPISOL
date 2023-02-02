@@ -66,7 +66,7 @@
                 $main_update_tip = 'A newer version '.$software_name.' <a href="https://github.com/EPISOLrelease/EPISOL"><u>'.$latest_main_version."</u></a> is available";
             } else {
                 $main_update_tip = 'Your have a newer version of '.$software_name;
-            } 
+            }
         }
 
         $kernel_update_tip = "";
@@ -76,10 +76,10 @@
             if ($kernel_ver_compare==0){
                 $kernel_update_tip = "Kernel is up to date";
             } else if ($kernel_ver_compare<0){
-                $kernel_update_tip = 'A new kernel <a href="https://github.com/EPISOLrelease/EPISOL/tree/main/src/kernel"><u>'.$latest_kernel_version."</u></a> is available"; 
+                $kernel_update_tip = 'A new kernel <a href="https://github.com/EPISOLrelease/EPISOL/tree/main/src/kernel"><u>'.$latest_kernel_version."</u></a> is available";
             } else {
                 $kernel_update_tip = 'Your have a newer version of kernel';
-            } 
+            }
         }
 
         if (!empty($main_update_tip)) echo('<br>'.$main_update_tip);
@@ -90,7 +90,7 @@
          echo ('<br><a href="install.php?update=yes">Click me to <u>check for update</u></a><br>'."\n");
     }
 
-    
+
     if (!empty($ver_fftw)){
         echo ('<br><b>fftw '.$ver_fftw.' installed</b><br>'."\n");
     } else {
@@ -159,12 +159,12 @@
         echo ('    <br><br><input type="submit" name="stop" value="Has installation finished? Click me to check"/>'."\n");
     } else {
         #echo ('    <br><br><input type="submit" name="stop" value="Kernel installed, click me won\'t change anything"/>'."\n");
-        #echo ('    <br><br>Kernel installed, go to <a href="iet.php">the next step</a>'."\n");  
+        #echo ('    <br><br>Kernel installed, go to <a href="iet.php">the next step</a>'."\n");
     }
     echo ('  </form><br>'."\n");
 
     if (file_exists("src/stdout.txt")){
-        echo ('<br><a href="viewfile.php?scroll=bottom&u='.getcwd().'/src/stdout.txt&reload=3" target="_blank">Click me the see the <u>installation log</u></a>'."\n");
+        echo ('<br><a href="viewfile.php?scroll=bottom&u='.$software_home.'/src/stdout.txt&reload=3" target="_blank">Click me the see the <u>installation log</u></a>'."\n");
     } else if (empty($iet_bin)){
         echo ('<br><small><a href="help.php#cannot_write_folder" style="color:#0080FF">Click me if you clicked installation buttons but<br> these two lines of blue text still exist</a></small>'."\n");
     }

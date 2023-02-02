@@ -27,7 +27,7 @@
 
     echo ('<h4>&#9678 What is '.$software_name.'?</h4>
   <p>'.$software_name.' is the graphic interface to do IET (integration equation theory of liquid) calculations. '.$software_name.' can produce site-based (i.e. atom-based) thermodynamical distributions of simple liquids around a given conformation of solute molecule; and HI can calculate molecule-based liquid density depletion of polar solvents or density segregation of solvent mixtures at solid-liquid interfaces.</p>
-  <p> '.$software_name.' currently contains the implementations of <a style="color:blue" href="http://doi.org/10.1021/cr5000283">3D Reference Interaction Site Model</a> (3DRISM), <a style="color:blue" href="http://doi.org/10.1063/1.4928051">Hydrophobicity induced density Inhomogeneity theory</a> (HI), <a style="color:blue" href="https://doi.org/10.1021/acs.jpcb.2c04431">Ion-Dipole Correction</a> (IDC). EPISol-1.1.326 can be seen in <a style="color:blue" href="">JCC ...</a>.
+  <p> '.$software_name.' currently contains the implementations of <a style="color:blue" href="http://doi.org/10.1021/cr5000283">3D Reference Interaction Site Model</a> (3DRISM), <a style="color:blue" href="http://doi.org/10.1063/1.4928051">Hydrophobicity induced density Inhomogeneity theory</a> (HI), <a style="color:blue" href="https://doi.org/10.1021/acs.jpcb.2c04431">Ion-Dipole Correction</a> (IDC). EPISol-1.1.321 can be seen in <a style="color:blue" href="">JCC ...</a>.
 '."\n");
     echo ('<p><b>Security concern</b>: please <a href="help.php#about_security" style="color:red"><b>click me</b></a> to see the security concerns to have a copy of EPISol on your server.'."\n");
 
