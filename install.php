@@ -57,7 +57,7 @@
 
     if ($check_kernel_update=="yes"){
         $main_update_tip = "";
-        $latest_main_version = shell_exec("curl https://raw.githubusercontent.com/EPISOLrelease/EPISOL/main/header.php 2>/dev/null | grep software_version | tr -d '\"' | tr -d ';' | awk '{print \$NF}' | tr -d '\n'");
+        $latest_main_version = shell_exec("curl https://raw.githubusercontent.com/EPISOLrelease/EPISOL/main/header.php 2>/dev/null | grep -v '//' | grep -v '#' | grep software_version | tr -d '\"' | tr -d ';' | awk '{print \$NF}' | tr -d '\n'");
         if (!empty($latest_main_version)){
             $main_ver_compare = compare_version_strings($software_version, $latest_main_version);
             if ($main_ver_compare==0){
@@ -70,7 +70,7 @@
         }
 
         $kernel_update_tip = "";
-        $latest_kernel_version = shell_exec("curl https://raw.githubusercontent.com/seechin/EPRISM3D/main/configure.ac 2>/dev/null | grep AC_INIT | tr -d '(' | tr -d ')' | tr -d '[' | tr -d ']' | awk '{print \$NF}' | tr -d '\n'");
+        $latest_kernel_version = shell_exec("curl https://raw.githubusercontent.com/seechin/EPRISM3D/main/configure.ac 2>/dev/null | grep -v '//' | grep -v '#' | grep AC_INIT | tr -d '(' | tr -d ')' | tr -d '[' | tr -d ']' | awk '{print \$NF}' | tr -d '\n'");
         if (!empty($latest_kernel_version)){
             $kernel_ver_compare = compare_version_strings($kernel_version, $latest_kernel_version);
             if ($kernel_ver_compare==0){
