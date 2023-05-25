@@ -1,3 +1,10 @@
+# 1.2
+
+May 25, 2023
+
+Now rism3d can directly read TOP files. This may require to define environmental string $GMXTOP (can be done with ``source GMXRC'') before starting EPISOL.
+
+
 # 1.1.326
 
 Jan 8, 2023

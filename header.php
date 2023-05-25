@@ -2,8 +2,7 @@
 
   // software version
 
-    $software_version = "1.1.326";
-    // $software_version = "1.2";
+    $software_version = "1.2";
 
   // software
 

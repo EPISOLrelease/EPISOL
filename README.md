@@ -4,7 +4,7 @@
 
 The graphic interface to do IET calculations
 
-v 1.1.326 (c) 2022 Cao Siqin
+v 1.2 (c) 2022 Cao Siqin
 
 # Installation
 

@@ -125,19 +125,19 @@
 
                 $filename = basename($set->solute);
                 $ext = is_dir($set->solute)? "" : pathinfo($filename,PATHINFO_EXTENSION);
-                if (!is_dir($set->solute) && strcasecmp($ext, "top")==0){
-                  // solute is a top file: convert it to solute first
-                    $fn_noext = substr($filename, 0, strlen($filename) - strlen($ext) - (substr($filename,strlen($filename)-strlen($ext)-1,1)=='.'?1:0));
-                    $topfile = $set->solute;
-                    $solutefile = $solute_folder.'/'.$fn_noext.'.solute';
-                    $set->solute = $solutefile;
-                    $exec = $gmxtop2solute.' -ab -top '.$topfile.' -o '.$solutefile.';';
-                    $exec .= generate_calc_command($set, $rismhi3d);
-                    //echo ('<p>command: '.$exec." >> ".$run_stdout.'</p><br>');
-                } else {
+                //if (!is_dir($set->solute) && strcasecmp($ext, "top")==0){
+                //  // solute is a top file: convert it to solute first
+                //    $fn_noext = substr($filename, 0, strlen($filename) - strlen($ext) - (substr($filename,strlen($filename)-strlen($ext)-1,1)=='.'?1:0));
+                //    $topfile = $set->solute;
+                //    $solutefile = $solute_folder.'/'.$fn_noext.'.solute';
+                //    $set->solute = $solutefile;
+                //    $exec = $gmxtop2solute.' -ab -top '.$topfile.' -o '.$solutefile.';';
+                //    $exec .= generate_calc_command($set, $rismhi3d);
+                //    //echo ('<p>command: '.$exec." >> ".$run_stdout.'</p><br>');
+                //} else {
                     $exec = generate_calc_command($set, $rismhi3d);
                     //echo ('<p>command: '.$exec." >> ".$run_stdout.'</p><br>');
-                }
+                //}
                 shell_exec("echo \# ".$software_name.": ".$exec." > ".$run_stdout);
                 shell_exec("nohup ".$exec." >> ".$run_stdout." 2>&1 &");
                 echo ('<script>window.onload = window.location.replace("'.($phpurl.generate_param_url($set)).'");</script>'."\n");
