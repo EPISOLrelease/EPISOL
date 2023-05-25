@@ -9,6 +9,14 @@ if [ -e $eprism_package ]; then
     echo Delete the old $eprism_package
     mv $eprism_package obselete
     rm -rf obselete
+    if [ -e bin ]; then
+        mv bin obselete
+        rm -rf obselete
+    fi
+    if [ -e share ]; then
+        mv share obselete
+        rm -rf obselete
+    fi
 fi
 
 if [ ! -e $eprism_package ]; then
