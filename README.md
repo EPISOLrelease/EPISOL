@@ -51,7 +51,7 @@ However, EPISOL uses FFTW package, so the compiled binaries are under the [GNU G
 
 # References
 
-[1] Siqin Cao, Michael L. Kalin, Xuhui Huang, EPISOL: A Software Package with Expanded Functions to Perform 3D-RISM Calculations for the Solvation of Chemical and Biological Molecules,  Journal of Computational Chemistry (submitted)
+[1] Siqin Cao, Michael L. Kalin, Xuhui Huang, EPISOL: A Software Package with Expanded Functions to Perform 3D-RISM Calculations for the Solvation of Chemical and Biological Molecules, [Journal of Computational Chemistry](https://doi.org/10.1002/jcc.27088)
 
 [2] Siqin Cao, Yunrui Qiu, Ilona C. Unarta, Eshani C. Goonetilleke, and Xuhui Huang, The Ion-Dipole Correction of the 3DRISM Solvation Model to Accurately Compute Water Distbutions around Negatively Charged Biomolecules, [Journal of Physical Chemistry B (2022)](https://doi.org/10.1021/acs.jpcb.2c04431)
 
