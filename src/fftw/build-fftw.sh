@@ -1,6 +1,10 @@
 #!/bin/bash
 
-fftw_package=fftw-3.3.8
+fftw_package=fftw-3.3.11
+
+if [ ! -e $fftw_package.tar.gz ]; then
+    curl -o $fftw_package.tar.gz https://www.fftw.org/$fftw_package.tar.gz
+fi
 
 if [ ! -e $fftw_package ]; then
     echo Extract the FFTW package
@@ -25,4 +29,3 @@ if [ -e `pwd`/../fftw3 ]; then
 else
     echo failed!
 fi
-
