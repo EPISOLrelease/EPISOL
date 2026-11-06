@@ -44,7 +44,9 @@ Other optional tools required for data analysis: gnuplot and ImageMagick. System
 
 # License
 
-You can use, modify or redistribute under the terms of the [GNU Lesser General Public License v3](https://www.gnu.org/licenses/lgpl-3.0.en.html)
+You can use, modify or redistribute EPISOL under the terms of the [MIT license](https://mit-license.org/).
+
+However, EPISOL uses FFTW package, so the compiled binaries are under the [GNU General Public License v2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html).
 
 
 # References
